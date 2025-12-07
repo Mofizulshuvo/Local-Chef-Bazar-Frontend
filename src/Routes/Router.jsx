@@ -4,6 +4,9 @@ import Error from "../Pages/Error/Error";
 import Home from "../Pages/Home/Home";
 import Meals from "../Pages/Meals/Meals";
 import Dashboard from "../Pages/Dashboard/Dashboard";
+import SignUp from "../Pages/SignUp/SignUp";
+import SignIn from "../Pages/SignIn/SignIn";
+
 
 
 
@@ -11,7 +14,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout/>,
-    errorElement:<Error></Error>,
+    // errorElement:<Error></Error>,
     children:[
       {
         path:"/",
@@ -24,6 +27,14 @@ export const router = createBrowserRouter([
       {
         path:"/Dashboard",
         element:<Dashboard></Dashboard>
+      },
+      {
+        path:"/SigUp",
+        element:<SignUp></SignUp>
+      },
+      {
+        path:"SignIn",
+        element:<SignIn></SignIn>
       }
     ]
     

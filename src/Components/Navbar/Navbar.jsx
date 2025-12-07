@@ -2,7 +2,7 @@ import React from "react";
 import Logo from "../Logo/Logo";
 import { NavLink } from "react-router";
 import LoginButton from "../Buttons/LoginButton";
-import SignUp from "../Buttons/Sign";
+import SignUp from "../Buttons/SignUpButton";
 
 const Navbar = () => {
   const IsActive = ({ isActive }) => {
