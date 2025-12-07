@@ -76,14 +76,10 @@ const SignInForm = () => {
             </h1>
           </div>
 
-          <div>
-           <button
-              type="submit"
-              className="w-[calc(100%-2.5rem)] mx-5 h-auto px-5 py-2 bg-[#ffffff] mt-2 text-Black rounded-sm text-center font-boldtext-2xl border "
-            >
-                <FcGoogle />Continue With Google
-            </button>
-          </div>
+          <button className="w-[calc(100%-2.5rem)] mx-5 h-auto px-5 py-2 bg-[#ffffff] mt-2 text-Black rounded-sm text-center font-boldtext-2xl border ">
+            <FcGoogle className="flex items-center "/>
+            Continue With Google
+          </button>
         </div>
       </div>
     </div>
