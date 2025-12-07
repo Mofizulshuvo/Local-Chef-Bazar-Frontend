@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 const MainLayout = () => {
   return (
     <div>
-      <div className="px-5 py-5 min-h-screen flex flex-col justify-between ">
+      <div className="px-5 py-5 min-h-screen flex-col justify-between ">
         <Navbar></Navbar>
         <Outlet></Outlet>
       </div>
