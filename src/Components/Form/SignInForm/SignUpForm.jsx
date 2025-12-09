@@ -1,12 +1,13 @@
+
 import React, { useContext } from "react";
-import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { NavLink } from "react-router";
-import image1 from "../../../assets/cooking (1).png";
+import image1 from "../../../assets/cooking.png";
 import bgImage from "../../../assets/pexels-ella-olsson-572949-1640777.jpg";
 import { AuthContext } from "../../../Context/AuthContext";
+import { useForm } from "react-hook-form";
 
-const SignInForm = () => {
+const SignUpForm = () => {
   const {
     SignInwithGoogle,
     SignUpwithEmailAndPassword,
@@ -25,10 +26,9 @@ const SignInForm = () => {
 
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-    const {email,password}=data;
-    SignInwithEmailAndPassword(email,password);
+    const { email, password } = data;
+    SignUpwithEmailAndPassword(email, password);
   };
-
   return (
     <div
       className="w-full h-full bg-cover bg-center backdrop-blur-lg"
@@ -40,9 +40,24 @@ const SignInForm = () => {
         </div>
 
         <div className="bg-white my-5 pt-5 pb-10 px-2 w-full rounded-2xl mx-auto">
-          <h1 className="text-3xl font-bold text-center">Please Sign In</h1>
+          <h1 className="text-3xl font-bold text-center">Please Sign Up</h1>
 
           <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="w-full h-auto px-5 py-1">
+              <label htmlFor="Full Name" className="font-semibold text-md">
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Your Name"
+                {...register("name", { required: "Name is required" })}
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
             <div className="w-full h-auto px-5 py-1">
               <label htmlFor="email" className="font-semibold text-md">
                 Email
@@ -82,7 +97,7 @@ const SignInForm = () => {
               type="submit"
               className="w-[calc(100%-2.5rem)] mx-5 px-5 py-2 bg-[#c81d20] mt-2 text-white rounded-sm text-center font-bold text-2xl"
             >
-              Sign In
+              Sign Up
             </button>
           </form>
 
@@ -109,4 +124,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;

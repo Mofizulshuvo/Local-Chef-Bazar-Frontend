@@ -1,17 +1,17 @@
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "../Firebase/Firebase.config";
 import { AuthContext } from "./AuthContext";
 import toast from "react-hot-toast";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 const AuthProvider = ({ children }) => {
   const Provider = new GoogleAuthProvider();
   const SignUpwithEmailAndPassword = (email, password) => {
-    createUserWithEmailAndPassword(auth, email, password)
+    return createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
         toast.success("You Signed Up Successfully!");
         // const user = userCredential.user;
@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const SignInwithEmailAndPassword = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
+    return signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         toast.success("You siged in successfully!");
         // const user = userCredential.user;
@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const SignInwithGoogle = () => {
-    signInWithPopup(auth, Provider)
+    return signInWithPopup(auth, Provider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
@@ -58,9 +58,13 @@ const AuthProvider = ({ children }) => {
       });
   };
 
-  const value = [SignUpwithEmailAndPassword, SignInwithEmailAndPassword,SignInwithGoogle];
+  const value = {
+    SignUpwithEmailAndPassword,
+    SignInwithEmailAndPassword,
+    SignInwithGoogle,
+  };
 
-  return <AuthContext value={value}>{children}</AuthContext>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;
