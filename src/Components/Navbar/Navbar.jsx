@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import Logo from "../Logo/Logo";
 import { NavLink } from "react-router";
 import LoginButton from "../Buttons/LoginButton";
 import SignUp from "../Buttons/SignUpButton";
+import { AuthContext } from "../../Context/AuthContext";
+import LogOutButton from "../Buttons/LogOutButton";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
+  console.log("The current user is :", user);
   const IsActive = ({ isActive }) => {
     return isActive
       ? "w-auto px-7 h-10 text-center bg-[#FC8A06] rounded-[20px] text-white px-2 py-1"
@@ -25,10 +29,14 @@ const Navbar = () => {
           Dashboard
         </NavLink>
       </div>
-      <div className="flex gap-3">
-        <LoginButton></LoginButton>
-        <SignUp></SignUp>
-      </div>
+      {user ? (
+        <LogOutButton></LogOutButton>
+      ) : (
+        <div className="flex gap-3">
+          <LoginButton></LoginButton>
+          <SignUp></SignUp>
+        </div>
+      )}
     </div>
   );
 };
