@@ -18,7 +18,7 @@ const AuthProvider = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
         toast.success("You Signed Up Successfully!");
-        // const user = userCredential.user;
+       
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -30,7 +30,7 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         toast.success("You siged in successfully!");
-        // const user = userCredential.user;
+        
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -43,19 +43,15 @@ const AuthProvider = ({ children }) => {
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
+        
         const user = result.user;
         toast.success("You siged in successfully!");
       })
       .catch((error) => {
-        // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
-        // The email of the user's account used.
         const email = error.customData.email;
-        // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-
         toast.error(errorMessage);
       });
   };
@@ -82,6 +78,7 @@ const AuthProvider = ({ children }) => {
     SignInwithGoogle,
     user,
     loading,
+     setLoading,
     LogOut
   };
 
