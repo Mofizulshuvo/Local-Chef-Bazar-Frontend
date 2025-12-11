@@ -126,6 +126,7 @@ const SignInForm = () => {
     loading,
     setLoading,
     LogOut,
+    userRole
   } = useContext(AuthContext);
 
   const handleGoogleSignIn = async () => {
@@ -142,6 +143,7 @@ const SignInForm = () => {
     console.log("Form Data:", data);
     const { email, password } = data;
     SignInwithEmailAndPassword(email, password);
+    console.log(userRole);
   };
 
   return (

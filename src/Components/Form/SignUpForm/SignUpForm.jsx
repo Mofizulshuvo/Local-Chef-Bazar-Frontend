@@ -3,20 +3,34 @@ import { AuthContext } from "../../../Context/AuthContext";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../Firebase/Firebase.config";
 
 const SignUpForm = () => {
-  const {
-    SignUpwithEmailAndPassword,
-    SignInwithEmailAndPassword,
-    SignInwithGoogle,
-    user,
-    loading,
-    setLoading,
-    LogOut,
-  } = useContext(AuthContext);
+  const { SignUpwithEmailAndPassword, SignInwithGoogle } =
+    useContext(AuthContext);
 
   const handleGoogleSignIn = async () => {
-    return await SignInwithGoogle();
+    try {
+      const googleUser = await SignInwithGoogle();
+
+      // Insert Google user into MongoDB
+      await axios.post("http://localhost:3000/users", {
+        uid: googleUser.uid,
+        name: googleUser.displayName || "",
+        email: googleUser.email,
+        profileImage: googleUser.photoURL || "",
+        address: "",
+        role: "user",
+        status: "active",
+        chefId: " ",
+      });
+
+      console.log("Google user added to database:", googleUser.uid);
+    } catch (error) {
+      console.error("Google SignIn error:", error);
+    }
   };
 
   const {
@@ -25,10 +39,29 @@ const SignUpForm = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    const { email, password } = data;
-    SignUpwithEmailAndPassword(email, password);
+  const onSubmit = async (data) => {
+    const { email, password, address, name } = data;
+    try {
+      const userData = await SignUpwithEmailAndPassword(email, password);
+      const User = userData.user;
+
+      // Insert user into MongoDB
+      await axios.post("http://localhost:3000/users", {
+        uid: User.uid,
+        name:name,
+        email:email,
+        profileImage: "",
+        address:address,
+        role: "admin",
+        status: "active",
+        chefId: " ",
+      });
+
+      console.log("User created successfully:", User.uid);
+      signOut(auth);
+    } catch (error) {
+      console.error("SignUp error:", error);
+    }
   };
 
   return (
@@ -53,15 +86,16 @@ const SignUpForm = () => {
               <p className="text-sm text-red-500">{errors.name.message}</p>
             )}
           </div>
+
           <div className="mb-3">
-            <label htmlFor="Address" className="font-semibold ml-1">
+            <label htmlFor="address" className="font-semibold ml-1">
               Address
             </label>
             <input
               type="text"
               className="w-full px-2 py-1 border border-gray-300 rounded-xl mt-1"
               placeholder="Your Address"
-              {...register("Address")}
+              {...register("address")}
             />
           </div>
 
@@ -87,7 +121,6 @@ const SignUpForm = () => {
             <input
               type="password"
               className="w-full px-2 py-1 border border-gray-300 rounded-xl mt-1"
-              placeholder=""
               {...register("password", { required: "Password is Required" })}
             />
             {errors.password && (
@@ -98,29 +131,28 @@ const SignUpForm = () => {
           <div className="mx-auto w-full">
             <button
               type="submit"
-              className="bg-red-700 text-center mx-auto w-full py-1 text-white rounded-2xl font-semibold text-xl "
+              className="bg-red-700 text-center mx-auto w-full py-1 text-white rounded-2xl font-semibold text-xl"
             >
-              Create Account{" "}
+              Create Account
             </button>
           </div>
         </form>
+
         <div>
           <h1 className="text-md mt-2 text-center">
             Already have an account?{" "}
-            <Link
-              to="/SignIn"
-              className="underline text-red-800 font-semibold "
-            >
+            <Link to="/SignIn" className="underline text-red-800 font-semibold">
               Sign In
             </Link>
           </h1>
+
           <div className="mx-auto w-full">
             <button
-              onClick={()=>handleGoogleSignIn()}
-              className="flex justify-center gap-3 items-center border border-gray-300 mt-3 text-center mx-auto w-full py-1  rounded-2xl font-semibold text-xl "
+              onClick={handleGoogleSignIn}
+              className="flex justify-center gap-3 items-center border border-gray-300 mt-3 text-center mx-auto w-full py-1 rounded-2xl font-semibold text-xl"
             >
-              {" "}
-              <FcGoogle /> <h1>Continue with Google</h1>{" "}
+              <FcGoogle />
+              <h1>Continue with Google</h1>
             </button>
           </div>
         </div>
