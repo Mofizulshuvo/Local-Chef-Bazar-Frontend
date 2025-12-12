@@ -4,9 +4,9 @@ import { Outlet } from 'react-router';
 
 const UserDashboard = () => {
     return (
-        <div>
-          <UserDashboardSideBar></UserDashboardSideBar>
-         <Outlet></Outlet>
+        <div className='flex gap-5 '>
+        <UserDashboardSideBar className="w-[200px]"></UserDashboardSideBar>
+         <Outlet className=""></Outlet>
         </div>
     );
 };

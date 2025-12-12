@@ -21,7 +21,7 @@ const SignUpForm = () => {
         name: googleUser.displayName || "",
         email: googleUser.email,
         profileImage: googleUser.photoURL || "",
-        address: "",
+        address: " ",
         role: "user",
         status: "active",
         chefId: " ",
@@ -52,7 +52,7 @@ const SignUpForm = () => {
         email:email,
         profileImage: "",
         address:address,
-        role: "admin",
+        role: "user",
         status: "active",
         chefId: " ",
       });

@@ -80,6 +80,7 @@ const AuthProvider = ({ children }) => {
   };
 
   // Track auth state
+  const [UsersAllDataFromDB,setUserAllDataFromDB]=useState("");
   const [userRole,setUserRole]=useState("user");
  useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -90,7 +91,9 @@ const AuthProvider = ({ children }) => {
         const { data } = await axios.get(
           `http://localhost:3000/users/${currentUser.uid}`
         );
+        setUserAllDataFromDB(data);
         setUserRole(data.role || "user");
+
       } catch (error) {
         console.log("Error fetching user role:", error.message);
         setUserRole("user");
@@ -112,7 +115,10 @@ const AuthProvider = ({ children }) => {
     SignInwithEmailAndPassword,
     SignInwithGoogle,
     LogOut,
+    UsersAllDataFromDB,
+    setUserAllDataFromDB,
     userRole,
+
   };
 
 
