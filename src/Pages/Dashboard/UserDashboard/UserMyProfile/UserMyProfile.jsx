@@ -8,7 +8,7 @@ const UserMyProfile = () => {
     console.log(UsersAllDataFromDB);
 
     return (
-        <div className='w-full text-center items-center'>
+        <div className='w-full text-center'>
             <div className='mx-auto'>
                 <img src="" alt="" />
             <div>

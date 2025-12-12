@@ -1,22 +1,34 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../../../Context/AuthContext";
+import { Link } from "react-router";
 
 const UserDashboardSideBar = () => {
+  const { UsersAllDataFromDB } = useContext(AuthContext);
+  const IsActive = ({ isActive }) =>
+    isActive
+      ? "w-auto px-7 h-10 text-center bg-[#F8B602] rounded-[20px] text-black px-2 py-1"
+      : "";
+
   return (
-    <div className="w-full bg-gray-100 h-screen p-5 border-r">
+    <div className="w-1/5 bg-white h-screen p-5">
       <h2 className="text-xl font-semibold mb-6">User Dashboard</h2>
       <nav className="flex flex-col gap-3">
-        <button className="py-2 px-4 bg-gray-500 text-white rounded">
-          Profile
-        </button>
-        <button className="py-2 px-4 bg-gray-500 text-white rounded">
+        <img src={UsersAllDataFromDB.profileImage} alt=""  className="w-[200px] h-[100px] rounded-[100%] bg-white" />
+        <Link to=" " className={IsActive}>
+         Profile
+        </Link>
+         
+        
+  
+        
           My Orders
-        </button>
-        <button className="py-2 px-4 bg-gray-500 text-white rounded">
+      
+       
           Favorites
-        </button>
-        <button className="py-2 px-4 bg-gray-500 text-white rounded">
+        
+   
           My Reviews
-        </button>
+       
       </nav>
     </div>
   );

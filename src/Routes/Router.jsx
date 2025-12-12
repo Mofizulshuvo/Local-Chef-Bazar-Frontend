@@ -103,7 +103,7 @@ export const router = createBrowserRouter([
             element:<PrivateRouter><ChefCreateMeal></ChefCreateMeal></PrivateRouter>
           },
           {
-            path:"MyMeal",
+            path:"OrderRequest",
             element:<PrivateRouter><ChefOrderRequest></ChefOrderRequest></PrivateRouter>
           },
         ]
