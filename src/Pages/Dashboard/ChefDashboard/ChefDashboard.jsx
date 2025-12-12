@@ -1,9 +1,12 @@
 import React from 'react';
+import ChefDashBoardSidebar from './ChefDashBoardSidebar';
+import { Outlet } from 'react-router';
 
 const ChefDashboard = () => {
     return (
         <div>
-            Chefs dashboard
+            <ChefDashBoardSidebar></ChefDashBoardSidebar>
+            <Outlet></Outlet>
         </div>
     );
 };
