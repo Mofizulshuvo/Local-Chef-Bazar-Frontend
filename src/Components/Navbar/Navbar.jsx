@@ -22,19 +22,19 @@ const Navbar = () => {
         <NavLink to="/" className={IsActive}>Home</NavLink>
         <NavLink to="/Meals" className={IsActive}>Meals</NavLink>
 
-        {/* Conditional Dashboard Links */}
+        
         {user && userRole === "admin" && (
-          <NavLink to="/admin-dashboard" className={IsActive}>Admin Panel</NavLink>
+          <NavLink to="/AdminDashboard" className={IsActive}>Dashboard</NavLink>
         )}
         {user && userRole === "chef" && (
-          <NavLink to="/chef-dashboard" className={IsActive}>Chef Panel</NavLink>
+          <NavLink to="ChefDashboard" className={IsActive}>Dashboard</NavLink>
         )}
         {user && userRole === "user" && (
-          <NavLink to="/dashboard" className={IsActive}>Dashboard</NavLink>
+          <NavLink to="/Dashboard" className={IsActive}>Dashboard</NavLink>
         )}
       </div>
 
-      {/* Right side buttons */}
+      
       {user ? (
         <LogOutButton />
       ) : (

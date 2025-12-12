@@ -15,7 +15,7 @@ const SignUpForm = () => {
     try {
       const googleUser = await SignInwithGoogle();
 
-      // Insert Google user into MongoDB
+      
       await axios.post("http://localhost:3000/users", {
         uid: googleUser.uid,
         name: googleUser.displayName || "",
@@ -45,7 +45,7 @@ const SignUpForm = () => {
       const userData = await SignUpwithEmailAndPassword(email, password);
       const User = userData.user;
 
-      // Insert user into MongoDB
+    
       await axios.post("http://localhost:3000/users", {
         uid: User.uid,
         name:name,
