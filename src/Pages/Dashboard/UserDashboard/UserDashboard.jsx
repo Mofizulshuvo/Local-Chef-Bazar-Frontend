@@ -4,9 +4,9 @@ import { Outlet } from "react-router";
 
 const UserDashboard = () => {
   return (
-    <div className="bg-gray-200 h-screen w-full flex gap-3 justify-between items-center">
-      <UserDashboardSideBar></UserDashboardSideBar>
-      <Outlet></Outlet>
+    <div className="flex gap-3">
+      <UserDashboardSideBar className="w-1/5"></UserDashboardSideBar>
+      <Outlet className="w-4/5"></Outlet>
     </div>
   );
 };

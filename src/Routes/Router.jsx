@@ -20,103 +20,144 @@ import UserMyReview from "../Pages/Dashboard/UserDashboard/UserMyReview/UserMyRe
 import ChefMyProfile from "../Pages/Dashboard/ChefDashboard/MyProfile/ChefMyProfile";
 import ChefMyMeal from "../Pages/Dashboard/ChefDashboard/MyMeal/ChefMyMeal";
 import ChefCreateMeal from "../Pages/Dashboard/ChefDashboard/CreateMeal/ChefCreateMeal";
-import ChefOrderRequest from "../Pages/Dashboard/ChefDashboard/OrderRequest/ChefOrderRequest"
-
-
-
+import ChefOrderRequest from "../Pages/Dashboard/ChefDashboard/OrderRequest/ChefOrderRequest";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout/>,
-    errorElement:<Error></Error>,
-    children:[
+    element: <MainLayout />,
+    errorElement: <Error />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/Meals", element: <Meals /> },
+      { path: "/SignUp", element: <SignUp /> },
+      { path: "/SignIn", element: <SignIn /> },
+    ],
+  },
+  {
+    path: "/Dashboard",
+    element: (
+      <PrivateRouter>
+        <Dashboard />
+      </PrivateRouter>
+    ),
+    children: [
       {
-        path:"/",
-        element:<Home></Home>
+        path: "",
+        element: (
+          <PrivateRouter>
+            <UserMyProfile />
+          </PrivateRouter>
+        ),
       },
       {
-        path:"/Meals",
-        element:<Meals></Meals>
+        path: "MyOrder",
+        element: (
+          <PrivateRouter>
+            <UserMyOrder />
+          </PrivateRouter>
+        ),
       },
       {
-        path:"/Dashboard",
-        element:<PrivateRouter><Dashboard></Dashboard></PrivateRouter>,
-        children:[
-          {
-            path:"",
-            element:<PrivateRouter><UserMyProfile></UserMyProfile></PrivateRouter>
-          },
-          {
-            path:"MyOrder",
-            element:<PrivateRouter><UserMyOrder></UserMyOrder></PrivateRouter>
-          },
-          {
-            path:"MyFavouriteMeal",
-            element:<PrivateRouter><UserMyFavouriteMeal></UserMyFavouriteMeal></PrivateRouter>
-          },
-          {
-            path:"MyReview",
-            element:<PrivateRouter><UserMyReview></UserMyReview></PrivateRouter>
-          },
-        ]
-      },
-
-      {
-       path:"/AdminDashboard",
-       element:<PrivateRouter><AdminDashboard></AdminDashboard></PrivateRouter>,
-       children:[
-        {
-          path:"",
-          element:<PrivateRouter><AdminMyProfile></AdminMyProfile></PrivateRouter>,
-        },
-        {
-          path:"ManageUser",
-          element:<PrivateRouter><AdminManageUser></AdminManageUser></PrivateRouter>
-        },
-        {
-          path:"ManageRequest",
-          element:<PrivateRouter><AdminManageRequest></AdminManageRequest></PrivateRouter>
-        },
-        {
-          path:"PlatformStatistics",
-          element:<PrivateRouter><AdminPlatformStatistics></AdminPlatformStatistics></PrivateRouter>
-        }
-       ]
-      },
-
-
-      {
-        path:"/ChefDashboard",
-        element:<PrivateRouter><ChefDashboard></ChefDashboard></PrivateRouter>,
-        children:[
-          {
-            path:"",
-            element:<PrivateRouter><ChefMyProfile></ChefMyProfile></PrivateRouter>
-          },
-          {
-            path:"MyMeal",
-            element:<PrivateRouter><ChefMyMeal></ChefMyMeal></PrivateRouter>
-          },
-          {
-            path:"CreateMeal",
-            element:<PrivateRouter><ChefCreateMeal></ChefCreateMeal></PrivateRouter>
-          },
-          {
-            path:"OrderRequest",
-            element:<PrivateRouter><ChefOrderRequest></ChefOrderRequest></PrivateRouter>
-          },
-        ]
+        path: "MyFavouriteMeal",
+        element: (
+          <PrivateRouter>
+            <UserMyFavouriteMeal />
+          </PrivateRouter>
+        ),
       },
       {
-        path:"/SignUp",
-        element:<SignUp></SignUp>
+        path: "MyReview",
+        element: (
+          <PrivateRouter>
+            <UserMyReview />
+          </PrivateRouter>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/AdminDashboard",
+    element: (
+      <PrivateRouter>
+        <AdminDashboard />
+      </PrivateRouter>
+    ),
+    children: [
+      {
+        path: "",
+        element: (
+          <PrivateRouter>
+            <AdminMyProfile />
+          </PrivateRouter>
+        ),
       },
       {
-        path:"/SignIn",
-        element:<SignIn></SignIn>
-      }
-    ]
-    
+        path: "ManageUser",
+        element: (
+          <PrivateRouter>
+            <AdminManageUser />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "ManageRequest",
+        element: (
+          <PrivateRouter>
+            <AdminManageRequest />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "PlatformStatistics",
+        element: (
+          <PrivateRouter>
+            <AdminPlatformStatistics />
+          </PrivateRouter>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/ChefDashboard",
+    element: (
+      <PrivateRouter>
+        <ChefDashboard />
+      </PrivateRouter>
+    ),
+    children: [
+      {
+        path: "",
+        element: (
+          <PrivateRouter>
+            <ChefMyProfile />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "MyMeal",
+        element: (
+          <PrivateRouter>
+            <ChefMyMeal />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "CreateMeal",
+        element: (
+          <PrivateRouter>
+            <ChefCreateMeal />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "OrderRequest",
+        element: (
+          <PrivateRouter>
+            <ChefOrderRequest />
+          </PrivateRouter>
+        ),
+      },
+    ],
   },
 ]);
