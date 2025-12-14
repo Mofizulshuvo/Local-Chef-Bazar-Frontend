@@ -31,6 +31,7 @@ const SignInForm = () => {
     console.log("Form Data:", data);
     const { email, password } = data;
     SignInwithEmailAndPassword(email, password);
+    console.log(user);
     console.log(userRole);
   };
 

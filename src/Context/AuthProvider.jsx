@@ -26,6 +26,7 @@ const AuthProvider = ({ children }) => {
         toast.success("You signed up successfully!");
         return userCredential; // return to get UID
         
+        
       })
       .catch((error) => {
         toast.error(error.message);
@@ -82,6 +83,7 @@ const AuthProvider = ({ children }) => {
   // Track auth state
   const [UsersAllDataFromDB,setUserAllDataFromDB]=useState("");
   const [userRole,setUserRole]=useState("user");
+  const [token,setToken]=useState("");
  useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
     setUser(currentUser);
@@ -101,6 +103,8 @@ const AuthProvider = ({ children }) => {
     } else {
       setUserRole("user");
     }
+    const idToken = await currentUser.getIdToken();
+        setToken(idToken);
   });
 
   return () => unsubscribe();
@@ -118,6 +122,7 @@ const AuthProvider = ({ children }) => {
     UsersAllDataFromDB,
     setUserAllDataFromDB,
     userRole,
+    token,
 
   };
 

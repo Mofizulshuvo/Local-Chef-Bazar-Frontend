@@ -25,6 +25,7 @@ const SignUpForm = () => {
         role: "user",
         status: "active",
         chefId: " ",
+        
       });
 
       console.log("Google user added to database:", googleUser.uid);
