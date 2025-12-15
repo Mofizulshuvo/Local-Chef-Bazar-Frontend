@@ -14,13 +14,11 @@ import { AuthContext } from "../../../Context/AuthContext";
 const AdminDashSidebar = () => {
   const { UsersAllDataFromDB } = useContext(AuthContext);
 
-  const navLinkClass = ({ isActive }) =>
-    `flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-200 relative
-     ${
-       isActive
-         ? "bg-blue-500 text-white font-semibold"
-         : "text-gray-600 hover:bg-gray-100"
-     }`;
+ const IsActive = ({ isActive }) =>
+    isActive
+       ? "flex items-center gap-3 px-6 py-3 rounded-lg bg-yellow-500 text-white font-semibold transition-all duration-200"
+      : "flex items-center gap-3 px-6 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-all duration-200";
+     
 
   return (
     <aside className="w-72 bg-white shadow-lg h-screen flex flex-col justify-between">
@@ -51,54 +49,22 @@ const AdminDashSidebar = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-6 flex flex-col gap-1 px-2">
-          <NavLink to="" className={navLinkClass}>
-            {({ isActive }) => (
-              <>
-                {/* Active Indicator */}
-                {isActive && (
-                  <span className="absolute left-0 top-0 h-full w-1 bg-white rounded-r"></span>
-                )}
-                <FiUser size={20} />
-                <span>My Profile</span>
-              </>
-            )}
+        <nav className="mt-6 flex flex-col gap-2 px-2">
+          <NavLink to="" end className={IsActive}>
+                 <FiUser size={20} /> My Profile    
           </NavLink>
 
-          <NavLink to="ManageUser" className={navLinkClass}>
-            {({ isActive }) => (
-              <>
-                {isActive && (
-                  <span className="absolute left-0 top-0 h-full w-1 bg-white rounded-r"></span>
-                )}
-                <FiUsers size={20} />
-                <span>Manage Users</span>
-              </>
-            )}
+          <NavLink to="ManageUser" className={IsActive}>
+               <FiUsers size={20} />Manage User      
           </NavLink>
 
-          <NavLink to="/admin/meals" className={navLinkClass}>
-            {({ isActive }) => (
-              <>
-                {isActive && (
-                  <span className="absolute left-0 top-0 h-full w-1 bg-white rounded-r"></span>
-                )}
-                <FiClipboard size={20} />
-                <span>Manage Meals</span>
-              </>
-            )}
+          <NavLink to="ManageRequest" className={IsActive}>
+                  <FiClipboard size={20} />Manage Request  
           </NavLink>
 
-          <NavLink to="/admin/settings" className={navLinkClass}>
-            {({ isActive }) => (
-              <>
-                {isActive && (
-                  <span className="absolute left-0 top-0 h-full w-1 bg-white rounded-r"></span>
-                )}
+          <NavLink to="PlatformStatistics" className={IsActive}>
                 <FiSettings size={20} />
-                <span>Settings</span>
-              </>
-            )}
+                <span>Statistics</span>  
           </NavLink>
         </nav>
       </div>

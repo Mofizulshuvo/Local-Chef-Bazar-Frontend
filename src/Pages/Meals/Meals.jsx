@@ -88,7 +88,9 @@ const Meals = () => {
             <p className="text-sm text-gray-500 mt-2 truncate">Ingredients: {meal.ingredients}</p>
             <p className="text-sm text-gray-500">Delivery: {meal.deliveryTime} min</p>
 
-            <div className="mt-4 flex items-center justify-between">
+           {
+            UsersAllDataFromDB?.role!=="admin" && (
+               <div className="mt-4 flex items-center justify-between">
               <button
                 onClick={() => handleOrder(meal)}
                 className="bg-emerald-500 hover:bg-emerald-600 text-white py-1.5 px-3 rounded-lg text-sm font-semibold transition"
@@ -102,6 +104,8 @@ const Meals = () => {
                 <FiHeart size={24} />
               </button>
             </div>
+            )
+           }
           </div>
         ))}
       </div>

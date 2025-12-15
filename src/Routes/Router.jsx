@@ -21,6 +21,7 @@ import ChefMyProfile from "../Pages/Dashboard/ChefDashboard/MyProfile/ChefMyProf
 import ChefMyMeal from "../Pages/Dashboard/ChefDashboard/MyMeal/ChefMyMeal";
 import ChefCreateMeal from "../Pages/Dashboard/ChefDashboard/CreateMeal/ChefCreateMeal";
 import ChefOrderRequest from "../Pages/Dashboard/ChefDashboard/OrderRequest/ChefOrderRequest";
+import UserDashboard from "../Pages/Dashboard/UserDashboard/UserDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ export const router = createBrowserRouter([
     path: "/Dashboard",
     element: (
       <PrivateRouter>
-        <Dashboard />
+        <UserDashboard />
       </PrivateRouter>
     ),
     children: [
