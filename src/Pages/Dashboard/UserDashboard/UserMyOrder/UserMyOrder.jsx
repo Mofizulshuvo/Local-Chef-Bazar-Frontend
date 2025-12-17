@@ -12,10 +12,11 @@ const UserMyMeal = () => {
     const fetchMeals = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:3000/meals", {
+        const res = await axios.get("http://localhost:3000/orders", {
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
-        setMeals(res.data);
+        const myMeals=res.data.filter((meal)=>meal.userEmail===UsersAllDataFromDB?.email);
+        setMeals(myMeals);
       } catch (err) {
         console.error(err);
         toast.error("Failed to fetch meals.");

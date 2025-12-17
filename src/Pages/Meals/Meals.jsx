@@ -89,7 +89,7 @@ const Meals = () => {
             <p className="text-sm text-gray-500">Delivery: {meal.deliveryTime} min</p>
 
            {
-            UsersAllDataFromDB?.role!=="admin" && (
+            UsersAllDataFromDB?.role!=="admin" && UsersAllDataFromDB?.role!=="chef" && (
                <div className="mt-4 flex items-center justify-between">
               <button
                 onClick={() => handleOrder(meal)}

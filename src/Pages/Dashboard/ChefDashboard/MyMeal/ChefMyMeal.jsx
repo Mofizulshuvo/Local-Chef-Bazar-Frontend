@@ -20,7 +20,7 @@ const ChefMyMeals = () => {
 
         // Filter meals by chefId if you want "My Meals" for the logged-in chef
         const myMeals = response.data.filter(
-          (meal) => meal.chefId === UsersAllDataFromDB?.chefId
+          (meal) => meal.email === UsersAllDataFromDB?.email
         );
 
         setMeals(myMeals);

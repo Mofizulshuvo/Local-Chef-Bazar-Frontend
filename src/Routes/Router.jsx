@@ -88,9 +88,9 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: (
-          <PrivateRouter>
+         
             <AdminMyProfile />
-          </PrivateRouter>
+          
         ),
       },
       {
