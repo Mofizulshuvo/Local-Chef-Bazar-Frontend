@@ -11,11 +11,11 @@ const Navbar = () => {
 
   const IsActive = ({ isActive }) =>
     isActive
-      ? "w-auto px-7 h-10 text-center bg-[#FC8A06] rounded-[20px] text-white px-2 py-1"
+      ? "w-auto px-7 h-10 text-center bg-[#C10007] rounded-[20px] text-white px-2 py-1"
       : "";
 
   return (
-    <div className="flex justify-between items-center text-2xl font-semibold">
+    <div className=" p-5 py-2 flex justify-between items-center text-xl font-semibold  shadow-sm">
       <Logo />
 
       <div className="flex justify-center items-center gap-10">
