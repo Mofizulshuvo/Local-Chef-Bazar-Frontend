@@ -4,7 +4,7 @@ import { ClipLoader } from 'react-spinners';
 
 const Loader = () => {
     return (
-        <div className="flex justify-center items-center ">
+        <div className="flex mx-auto items-center ">
             <ClipLoader
                 size={60}
                 color={"#123abc"}

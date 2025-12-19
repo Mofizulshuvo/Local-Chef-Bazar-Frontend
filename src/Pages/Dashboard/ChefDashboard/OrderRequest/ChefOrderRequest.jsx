@@ -144,11 +144,11 @@ const ChefOrderRequest = () => {
 
               <button
                 disabled={
-                  order.orderStatus !== "accepted" || updatingId === order._id
+                  order.orderStatus !== "accepted" || order.paymentStatus!=="paid"|| updatingId === order._id
                 }
                 onClick={() => confirmAction(order, "delivered")}
                 className={`px-4 py-1 rounded text-white ${
-                  order.orderStatus !== "accepted"
+                  order.orderStatus !== "accepted" || order.paymentStatus!=="paid"
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-blue-500 hover:bg-blue-600"
                 }`}

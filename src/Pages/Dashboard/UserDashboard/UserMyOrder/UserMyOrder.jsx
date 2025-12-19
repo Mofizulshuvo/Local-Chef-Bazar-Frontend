@@ -13,13 +13,11 @@ const UserMyMeal = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3000/orders", {
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-      });
-      const myOrders = res.data.filter(
-        (order) => order.userEmail === UsersAllDataFromDB?.email
+      const res = await axios.get(
+        `http://localhost:3000/orders/${UsersAllDataFromDB?.email}`,
+        { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
       );
-      setOrders(myOrders);
+      setOrders(res.data);
     } catch (err) {
       console.error(err);
       toast.error("Failed to fetch orders.");
@@ -33,7 +31,7 @@ const UserMyMeal = () => {
   }, [UsersAllDataFromDB, token]);
 
   const handlePayment = async (orderId) => {
-    const confirm = await Swal.fire({
+    const confirmPayment = await Swal.fire({
       title: "Confirm Payment",
       text: "Are you sure you want to complete the payment?",
       icon: "question",
@@ -41,25 +39,26 @@ const UserMyMeal = () => {
       confirmButtonText: "Yes, pay now",
     });
 
-    if (confirm.isConfirmed) {
-      try {
-        await axios.put(
-          `http://localhost:3000/orders/${orderId}`,
-          { paymentStatus: "completed" },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        Swal.fire("Success", "Payment completed!", "success");
-        fetchOrders();
-      } catch (err) {
-        console.error(err);
-        Swal.fire("Error", "Failed to complete payment.", "error");
-      }
+    if (!confirmPayment.isConfirmed) return;
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/createPaymentSession",
+        { orderId },
+        { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
+      );
+
+      // Redirect to Stripe checkout
+      window.location.href = res.data.url;
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "Payment failed. Please try again.", "error");
     }
   };
 
   if (loading) return <Loader />;
 
-  if (orders.length === 0)
+  if (!orders.length)
     return (
       <div className="flex justify-center items-center h-full mt-10">
         <p className="text-gray-500 text-lg">You haven't placed any orders yet.</p>
@@ -78,28 +77,40 @@ const UserMyMeal = () => {
             key={order._id}
             className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-xl transition"
           >
+            
             <div className="flex justify-center md:justify-start">
               <img
                 src={order.foodImage || "https://via.placeholder.com/100"}
-                alt={order.foodName}
+                alt={order.mealName}
                 className="w-24 h-24 md:w-28 md:h-28 object-cover rounded-lg"
               />
             </div>
 
-            <div className="flex flex-col justify-center text-gray-800 font-semibold text-center md:text-left">
+            
+            <div className="flex flex-col justify-center mx-auto gap-3 text-gray-800 font-semibold text-center md:text-left">
               <span className="text-sm md:text-base text-gray-700">Food Name</span>
-              <span className="text-lg md:text-xl font-bold">{order.foodName}</span>
+              <span className="text-lg md:text-xl font-bold">{order.mealName}</span>
             </div>
 
-            <div className="flex flex-col justify-center text-center md:text-left">
-              <span className="text-sm text-gray-500">Price</span>
-              <span className="text-lg font-semibold">${order.price}</span>
+            
+            <div className="flex flex-col mx-auto justify-center gap-3  text-center md:text-left">
+              <span className="text-sm mx-auto text-gray-500">Quantity</span>
+              <span className="text-lg mx-auto font-semibold">{order.quantity || 1}</span>
             </div>
 
-            <div className="flex flex-col justify-center text-center md:text-left">
-              <span className="text-sm text-gray-500">Order Status</span>
+          
+            <div className="flex flex-col justify-center mx-auto gap-3 text-center md:text-left">
+              <span className="text-sm mx-auto text-gray-500">Total Price</span>
+              <span className="text-lg mx-auto font-semibold">
+                ${order.price * (order.quantity || 1)}
+              </span>
+            </div>
+
+            
+            <div className="flex flex-col justify-center mx-auto gap-3 text-center md:text-left">
+              <span className="text-sm mx-auto text-gray-500">Order Status</span>
               <span
-                className={`px-3 py-1 rounded-full font-semibold text-sm ${
+                className={`px-3 py-1 rounded-full text-center mx-auto font-semibold text-sm ${
                   order.orderStatus === "pending"
                     ? "bg-yellow-100 text-yellow-800"
                     : order.orderStatus === "accepted"
@@ -111,29 +122,24 @@ const UserMyMeal = () => {
               </span>
             </div>
 
-            <div className="flex flex-col justify-center text-center md:text-left">
+            
+            <div className="flex flex-col justify-center text-center gap-3 items-center md:items-start">
               <span className="text-sm text-gray-500">Payment Status</span>
-              <span
-                className={`px-3 py-1 rounded-full font-semibold text-sm ${
-                  order.paymentStatus === "completed"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-gray-100 text-gray-600"
-                }`}
-              >
-                {order.paymentStatus || "pending"}
-              </span>
-            </div>
-
-            <div className="flex flex-col justify-center items-center md:items-start">
-              {order.orderStatus === "accepted" && order.paymentStatus !== "completed" ? (
+              {order.orderStatus === "accepted" && order.paymentStatus !== "paid" ? (
                 <button
                   onClick={() => handlePayment(order._id)}
                   className="bg-gradient-to-r from-emerald-400 to-emerald-600 text-white px-4 py-2 rounded-xl font-semibold shadow hover:scale-105 transform transition"
                 >
                   Pay Now
                 </button>
+              ) : (order.orderStatus === "accepted" || order.orderStatus === "delivered" )&& order.paymentStatus === "paid" ? (
+                <span className="px-4 py-2 rounded-xl font-semibold bg-green-100 text-green-800">
+                  Paid
+                </span>
               ) : (
-                <span className="text-gray-400 font-medium">N/A</span>
+                <span className="px-4 py-2 rounded-xl font-semibold bg-gray-100 text-gray-400">
+                 Chef not accept
+                </span>
               )}
             </div>
           </div>
