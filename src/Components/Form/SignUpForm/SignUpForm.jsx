@@ -24,7 +24,7 @@ const SignUpForm = () => {
     try {
       const googleUser = await SignInwithGoogle();
 
-      await axios.post("http://localhost:3000/users", {
+      await axios.post("https://local-chef-bazar-backend-1.onrender.com/users", {
         uid: googleUser.uid,
         name: googleUser.displayName,
         email: googleUser.email,
@@ -66,7 +66,7 @@ const SignUpForm = () => {
       }
 
      
-      await axios.post("http://localhost:3000/users", {
+      await axios.post("https://local-chef-bazar-backend-1.onrender.com/users", {
         uid: User.uid,
         name:name,
         email:email,

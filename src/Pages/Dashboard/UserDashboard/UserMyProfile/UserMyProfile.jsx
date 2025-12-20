@@ -13,7 +13,7 @@ const UserMyProfile = () => {
     setRequestLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:3000/request/${UsersAllDataFromDB.uid}`
+        `https://local-chef-bazar-backend-1.onrender.com/request/${UsersAllDataFromDB.uid}`
       );
       setRequestData(res.data);
     } catch {
@@ -28,7 +28,7 @@ const UserMyProfile = () => {
   }, [UsersAllDataFromDB?.uid]);
 
   const handleRequestChef = async () => {
-    await axios.post("http://localhost:3000/request", {
+    await axios.post("https://local-chef-bazar-backend-1.onrender.com/request", {
       uid: UsersAllDataFromDB.uid,
       name: UsersAllDataFromDB.name,
       currentRole: UsersAllDataFromDB.role,
@@ -38,7 +38,7 @@ const UserMyProfile = () => {
   };
 
   const handleRequestAdmin = async () => {
-    await axios.post("http://localhost:3000/request", {
+    await axios.post("https://local-chef-bazar-backend-1.onrender.com/request", {
       uid: UsersAllDataFromDB.uid,
       name: UsersAllDataFromDB.name,
       currentRole: UsersAllDataFromDB.role,

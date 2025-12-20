@@ -53,7 +53,7 @@ const ChefCreateMeal = () => {
         email: UsersAllDataFromDB?.email,
       };
 
-      await axios.post("http://localhost:3000/meals", mealData, {
+      await axios.post("https://local-chef-bazar-backend-1.onrender.com/meals", mealData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

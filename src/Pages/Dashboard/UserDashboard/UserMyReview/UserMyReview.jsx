@@ -14,7 +14,7 @@ const UserMyReview = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `http://localhost:3000/reviews/${UsersAllDataFromDB._id}`,
+        `https://local-chef-bazar-backend-1.onrender.com/reviews/${UsersAllDataFromDB._id}`,
         { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
       );
 

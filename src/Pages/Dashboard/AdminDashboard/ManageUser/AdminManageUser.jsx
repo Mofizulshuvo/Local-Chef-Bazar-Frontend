@@ -17,7 +17,7 @@ const AdminManageUser = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3000/users", {
+      const res = await axios.get("https://local-chef-bazar-backend-1.onrender.com/users", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
@@ -46,7 +46,7 @@ const AdminManageUser = () => {
 
     try {
       await axios.put(
-        `http://localhost:3000/users/${userId}/status`,
+        `https://local-chef-bazar-backend-1.onrender.com/users/${userId}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );

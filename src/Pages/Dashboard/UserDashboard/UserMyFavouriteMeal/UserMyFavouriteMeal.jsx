@@ -17,12 +17,12 @@ const UserMyFavouriteMeal = () => {
     try {
       setLoading(true);
 
-      const favRes = await axios.get("http://localhost:3000/favorites");
+      const favRes = await axios.get("https://local-chef-bazar-backend-1.onrender.com/favorites");
       const userFavorites = favRes.data.filter(
         (fav) => fav.userEmail === UsersAllDataFromDB.email
       );
 
-      const mealRes = await axios.get("http://localhost:3000/meals");
+      const mealRes = await axios.get("https://local-chef-bazar-backend-1.onrender.com/meals");
       const meals = mealRes.data;
 
       const favMeals = meals.filter((meal) =>
@@ -53,7 +53,7 @@ const UserMyFavouriteMeal = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:3000/favorites/${mealId}`, {
+        await axios.delete(`https://local-chef-bazar-backend-1.onrender.com/favorites/${mealId}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
 

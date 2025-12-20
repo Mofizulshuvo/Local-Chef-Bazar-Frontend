@@ -9,7 +9,7 @@ const OurChefs = () => {
   useEffect(() => {
     const fetchChefs = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/users");
+        const res = await axios.get("https://local-chef-bazar-backend-1.onrender.com/users");
 
         const activeChefs = res.data
           .filter(

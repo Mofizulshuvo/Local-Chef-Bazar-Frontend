@@ -14,7 +14,7 @@ const UserMyMeal = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `http://localhost:3000/orders/${UsersAllDataFromDB?.email}`,
+        `https://local-chef-bazar-backend-1.onrender.com/orders/${UsersAllDataFromDB?.email}`,
         { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
       );
       setOrders(res.data);
@@ -42,7 +42,7 @@ const UserMyMeal = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/createPaymentSession",
+        "https://local-chef-bazar-backend-1.onrender.com/createPaymentSession",
         { orderId },
         { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
       );

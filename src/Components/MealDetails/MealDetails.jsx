@@ -30,7 +30,7 @@ const MealDetails = () => {
     const fetchMeal = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:3000/meals/${id}`);
+        const res = await axios.get(`https://local-chef-bazar-backend-1.onrender.com/meals/${id}`);
         setMeal(res.data);
       } catch {
         toast.error("Failed to load meal");
@@ -48,7 +48,7 @@ const MealDetails = () => {
     try {
       setFavoriting(true);
       await axios.post(
-        "http://localhost:3000/favorites",
+        "https://local-chef-bazar-backend-1.onrender.com/favorites",
         {
           mealId: meal._id,
           mealName: meal.foodName,
@@ -72,7 +72,7 @@ const MealDetails = () => {
     try {
       setPostingComment(true);
       const res = await axios.post(
-        "http://localhost:3000/reviews",
+        "https://local-chef-bazar-backend-1.onrender.com/reviews",
         {
           mealId: meal._id,
           userEmail: UsersAllDataFromDB?.email,
@@ -119,7 +119,7 @@ const MealDetails = () => {
 
     try {
       await axios.post(
-        "http://localhost:3000/orders",
+        "https://local-chef-bazar-backend-1.onrender.com/orders",
         {
           mealId: meal._id,
           mealName: meal.foodName,

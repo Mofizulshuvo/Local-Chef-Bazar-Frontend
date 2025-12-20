@@ -31,7 +31,7 @@ const AdminMyProfile = () => {
       setLoading(true);
 
       const res = await axios.put(
-        `http://localhost:3000/users/${UsersAllDataFromDB.uid}`,
+        `https://local-chef-bazar-backend-1.onrender.com/users/${UsersAllDataFromDB.uid}`,
         data,
         {
           headers: { Authorization: `Bearer ${token}` },

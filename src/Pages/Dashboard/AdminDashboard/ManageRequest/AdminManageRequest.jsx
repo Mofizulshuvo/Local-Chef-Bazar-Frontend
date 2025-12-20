@@ -9,7 +9,7 @@ const AdminManageRequest = () => {
   const fetchRequests = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3000/request");
+      const res = await axios.get("https://local-chef-bazar-backend-1.onrender.com/request");
       const sorted = res.data.sort(
         (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
       );
@@ -27,7 +27,7 @@ const AdminManageRequest = () => {
 
   const acceptRequest = async (req) => {
     try {
-      await axios.put(`http://localhost:3000/request/${req._id}/accept`);
+      await axios.put(`https://local-chef-bazar-backend-1.onrender.com/request/${req._id}/accept`);
       fetchRequests();
     } catch (err) {
       console.error("Error accepting request:", err);
@@ -36,7 +36,7 @@ const AdminManageRequest = () => {
 
   const rejectRequest = async (req) => {
     try {
-      await axios.put(`http://localhost:3000/request/${req._id}/reject`);
+      await axios.put(`https://local-chef-bazar-backend-1.onrender.com/request/${req._id}/reject`);
       fetchRequests();
     } catch (err) {
       console.error("Error rejecting request:", err);

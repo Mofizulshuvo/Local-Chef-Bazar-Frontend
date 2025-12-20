@@ -14,7 +14,7 @@ const CustomersReview = () => {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/websiteReview");
+      const res = await axios.get("https://local-chef-bazar-backend-1.onrender.com/websiteReview");
       setReviews(res.data.slice(-3).reverse());
     } catch {
       toast.error("Failed to load reviews");
@@ -23,7 +23,7 @@ const CustomersReview = () => {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post("http://localhost:3000/websiteReview", data);
+      await axios.post("https://local-chef-bazar-backend-1.onrender.com/websiteReview", data);
       toast.success("Thanks for your review ❤️");
       reset();
       fetchReviews();

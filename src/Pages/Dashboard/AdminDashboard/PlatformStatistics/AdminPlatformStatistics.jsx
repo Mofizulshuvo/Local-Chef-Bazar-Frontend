@@ -25,8 +25,8 @@ const AdminPlatformStatistics = () => {
       try {
         setLoading(true);
         const [usersRes, ordersRes] = await Promise.all([
-          axios.get("http://localhost:3000/users"),
-          axios.get("http://localhost:3000/orders"),
+          axios.get("https://local-chef-bazar-backend-1.onrender.com/users"),
+          axios.get("https://local-chef-bazar-backend-1.onrender.com/orders"),
         ]);
 
         const users = usersRes.data || [];

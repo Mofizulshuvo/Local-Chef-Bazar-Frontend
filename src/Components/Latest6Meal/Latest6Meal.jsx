@@ -12,7 +12,7 @@ const Latest6Meals = () => {
     const fetchMeals = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:3000/meals");
+        const res = await axios.get("https://local-chef-bazar-backend-1.onrender.com/meals");
         setMeals(res.data.slice(0, 8));
       } catch (err) {
         console.error(err);

@@ -23,7 +23,7 @@ const Meals = () => {
     const fetchMeals = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:3000/meals");
+        const response = await axios.get("https://local-chef-bazar-backend-1.onrender.com/meals");
         setMeals(response.data);
       } catch (err) {
         console.error(err);
@@ -90,7 +90,7 @@ const Meals = () => {
     };
 
     try {
-      await axios.post("http://localhost:3000/orders", orderPayload);
+      await axios.post("https://local-chef-bazar-backend-1.onrender.com/orders", orderPayload);
       Swal.fire("Success!", "Order placed successfully!", "success");
       setShowModal(false);
     } catch (err) {
@@ -106,7 +106,7 @@ const Meals = () => {
         userEmail: UsersAllDataFromDB.email,
         mealName: meal.foodName,
       };
-      await axios.post("http://localhost:3000/favorites", payload);
+      await axios.post("https://local-chef-bazar-backend-1.onrender.com/favorites", payload);
       toast.success("Added to favorites!");
     } catch (err) {
       console.error(err);

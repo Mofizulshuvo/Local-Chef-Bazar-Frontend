@@ -18,7 +18,7 @@ const ChefOrderRequest = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:3000/orders", {
+        const res = await axios.get("https://local-chef-bazar-backend-1.onrender.com/orders", {
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
 
@@ -54,7 +54,7 @@ const ChefOrderRequest = () => {
       setUpdatingId(orderId);
 
       await axios.put(
-        `http://localhost:3000/orders/${orderId}`,
+        `https://local-chef-bazar-backend-1.onrender.com/orders/${orderId}`,
         { orderStatus: selectedAction },
         { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
       );

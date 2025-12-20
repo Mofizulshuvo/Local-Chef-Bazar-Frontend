@@ -20,7 +20,7 @@ const ChefMyMeals = () => {
   const fetchMeals = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/meals", {
+      const response = await axios.get("https://local-chef-bazar-backend-1.onrender.com/meals", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const myMeals = response.data.filter(
@@ -51,7 +51,7 @@ const ChefMyMeals = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:3000/meals/${id}`, {
+        await axios.delete(`https://local-chef-bazar-backend-1.onrender.com/meals/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         Swal.fire("Deleted!", "Meal has been deleted.", "success");
@@ -83,7 +83,7 @@ const ChefMyMeals = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:3000/meals/${updatingMeal}`,
+        `https://local-chef-bazar-backend-1.onrender.com/meals/${updatingMeal}`,
         updateData,
         {
           headers: { Authorization: `Bearer ${token}` },

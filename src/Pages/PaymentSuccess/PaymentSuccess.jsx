@@ -17,7 +17,7 @@ const PaymentSuccess = () => {
       const updatePayment = async () => {
         try {
           await axios.put(
-            `http://localhost:3000/orders/payment/${orderId}`,
+            `https://local-chef-bazar-backend-1.onrender.com/orders/payment/${orderId}`,
             {},
             { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
           );

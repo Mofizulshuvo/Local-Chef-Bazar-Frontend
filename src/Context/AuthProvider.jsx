@@ -91,7 +91,7 @@ const AuthProvider = ({ children }) => {
     if (currentUser) {
       try {
         const { data } = await axios.get(
-          `http://localhost:3000/users/${currentUser.uid}`
+          `https://local-chef-bazar-backend-1.onrender.com/users/${currentUser.uid}`
         );
         setUserAllDataFromDB(data);
         setUserRole(data.role || "user");
