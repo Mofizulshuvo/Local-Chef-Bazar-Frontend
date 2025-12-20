@@ -28,7 +28,6 @@ const AdminManageRequest = () => {
   const acceptRequest = async (req) => {
     try {
       await axios.put(`http://localhost:3000/request/${req._id}/accept`);
-
       fetchRequests();
     } catch (err) {
       console.error("Error accepting request:", err);
@@ -38,7 +37,6 @@ const AdminManageRequest = () => {
   const rejectRequest = async (req) => {
     try {
       await axios.put(`http://localhost:3000/request/${req._id}/reject`);
-
       fetchRequests();
     } catch (err) {
       console.error("Error rejecting request:", err);
@@ -48,49 +46,66 @@ const AdminManageRequest = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="p-6 bg-white shadow rounded-lg w-full">
-      <h2 className="text-2xl text-center font-bold mb-4">Manage Requests</h2>
+    <div className="p-6 w-full">
+      <h2 className="text-4xl font-bold text-center text-[#C10007] mb-10">
+        Manage Requests
+      </h2>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-gray-200 rounded-2xl shadow-xl bg-white border border-gray-100">
+          <thead className="bg-black rounded-t-2xl">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase">
                 Current Role
               </th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase">
                 Request For
               </th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {requests.map((req) => (
-              <tr key={req._id}>
-                <td className="px-6 py-4 text-sm text-gray-700">{req.name}</td>
-                <td className="px-6 py-4 text-sm text-gray-700 capitalize">
+              <tr
+                key={req._id}
+                className="hover:shadow-2xl transition-all transform hover:-translate-y-1 rounded-lg"
+              >
+                <td className="px-6 py-4 text-sm text-black">{req.name}</td>
+                <td className="px-6 py-4 text-sm text-black capitalize">
                   {req.currentRole}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-700 capitalize">
+                <td className="px-6 py-4 text-sm text-black capitalize">
                   {req.requestFor}
                 </td>
                 <td className="px-6 py-4">
                   <span
-                    className={`px-2 py-1 rounded text-white text-sm font-semibold ${
-                      req.requestStatus === "pending"
-                        ? "bg-yellow-500"
-                        : req.requestStatus === "approved"
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    }`}
+                    className={`px-3 py-1 rounded-full text-sm font-semibold`}
+                    style={{
+                      backgroundColor:
+                        req.requestStatus === "pending"
+                          ? "#C10007"
+                          : req.requestStatus === "approved"
+                          ? "#000000"
+                          : "#FFFFFF",
+                      color:
+                        req.requestStatus === "pending"
+                          ? "#FFFFFF"
+                          : req.requestStatus === "approved"
+                          ? "#FFFFFF"
+                          : "#000000",
+                      border:
+                        req.requestStatus === "rejected"
+                          ? "1px solid #C10007"
+                          : "none",
+                    }}
                   >
                     {req.requestStatus}
                   </span>
@@ -99,9 +114,9 @@ const AdminManageRequest = () => {
                   <button
                     onClick={() => acceptRequest(req)}
                     disabled={req.requestStatus !== "pending"}
-                    className={`px-3 py-1 rounded text-white text-sm font-semibold ${
+                    className={`px-4 py-2 rounded-xl text-white font-semibold shadow-md transform transition hover:-translate-y-1 hover:shadow-lg ${
                       req.requestStatus === "pending"
-                        ? "bg-green-500 hover:bg-green-600"
+                        ? "bg-[#C10007] hover:bg-red-700"
                         : "bg-gray-400 cursor-not-allowed"
                     }`}
                   >
@@ -110,9 +125,9 @@ const AdminManageRequest = () => {
                   <button
                     onClick={() => rejectRequest(req)}
                     disabled={req.requestStatus !== "pending"}
-                    className={`px-3 py-1 rounded text-white text-sm font-semibold ${
+                    className={`px-4 py-2 rounded-xl text-white font-semibold shadow-md transform transition hover:-translate-y-1 hover:shadow-lg ${
                       req.requestStatus === "pending"
-                        ? "bg-red-500 hover:bg-red-600"
+                        ? "bg-black hover:bg-gray-800"
                         : "bg-gray-400 cursor-not-allowed"
                     }`}
                   >

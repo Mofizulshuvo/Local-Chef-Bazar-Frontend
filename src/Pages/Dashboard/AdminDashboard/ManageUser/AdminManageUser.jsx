@@ -38,6 +38,8 @@ const AdminManageUser = () => {
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, continue",
+      confirmButtonColor: "#C10007",
+      cancelButtonColor: "#000000",
     });
 
     if (!confirm.isConfirmed) return;
@@ -68,11 +70,12 @@ const AdminManageUser = () => {
   }
 
   return (
-    <div className="bg-white p-6 w-full rounded-2xl mx-auto shadow-lg">
-      <h1 className="text-3xl font-bold mb-10 mx-auto text-center ">Manage Users</h1>
+    <div className="p-6 w-full">
+      <h1 className="text-4xl font-bold mb-10 text-center text-[#C10007]">
+        Manage Users
+      </h1>
 
-  
-      <div className="grid grid-cols-6  gap-4 text-gray-500 font-semibold pb-2 mb-4 px-2">
+      <div className="grid grid-cols-6 gap-4 text-black font-semibold pb-2 mb-4 px-2">
         <div className="text-center">No</div>
         <div className="text-center">User</div>
         <div className="text-center">Email</div>
@@ -81,31 +84,34 @@ const AdminManageUser = () => {
         <div className="text-center">Action</div>
       </div>
 
-     
-      <div className="space-y-4">
+      <div className="space-y-6">
         {users.map((user, index) => (
           <div
             key={user._id}
-            className="grid grid-cols-6 gap-4 bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-xl transition items-center"
+            className="grid grid-cols-6 gap-4 bg-white rounded-3xl shadow-2xl p-6 transform transition-transform hover:-translate-y-2 hover:shadow-3xl border border-gray-200"
           >
-            <div className="text-gray-400 mx-auto ">{index + 1}</div>
+            <div className="text-center font-bold text-black">{index + 1}</div>
 
-            <div className="flex mx-auto items-center gap-3">
-            
-              <span className="font-medium mx-auto ">{user.name || "N/A"}</span>
+            <div className="flex items-center justify-center gap-2 text-black font-medium">
+              {user.name || "N/A"}
             </div>
 
-            <div className="text-gray-600 mx-auto">{user.email}</div>
+            <div className="text-center text-black">{user.email}</div>
 
             <div className="text-center">
               <span
-                className={`px-2 py-1 rounded text-xs mx-auto font-semibold ${
-                  user.role === "admin"
-                    ? "bg-blue-100 text-blue-600"
-                    : user.role === "chef"
-                    ? "bg-green-100 text-green-600"
-                    : "bg-gray-100 text-gray-600"
-                }`}
+                className={`px-3 py-1 rounded-full text-xs font-semibold`}
+                style={{
+                  backgroundColor:
+                    user.role === "admin"
+                      ? "#C10007"
+                      : user.role === "chef"
+                      ? "#000000"
+                      : "#FFFFFF",
+                  color:
+                    user.role === "chef" ? "#FFFFFF" : user.role === "admin" ? "#FFF" : "#000",
+                  border: user.role === "user" ? "1px solid #000" : "none",
+                }}
               >
                 {user.role}
               </span>
@@ -113,28 +119,29 @@ const AdminManageUser = () => {
 
             <div className="text-center">
               <span
-                className={`px-2 py-1 rounded text-xs mx-auto font-semibold ${
-                  user.status === "fraud"
-                    ? "bg-red-100 text-red-600"
-                    : "bg-green-100 text-green-600"
-                }`}
+                className={`px-3 py-1 rounded-full text-xs font-semibold`}
+                style={{
+                  backgroundColor:
+                    user.status === "fraud" ? "#C10007" : "#000000",
+                  color: "#FFFFFF",
+                }}
               >
                 {user.status || "active"}
               </span>
             </div>
 
-            <div className="text-center mx-auto">
+            <div className="flex justify-center">
               {user.status === "fraud" ? (
                 <button
                   onClick={() => handleStatusChange(user._id, "active")}
-                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs font-semibold"
+                  className="bg-[#000000] hover:bg-gray-800 text-white px-4 py-2 rounded-xl font-semibold shadow-md transform transition hover:-translate-y-1 hover:shadow-lg"
                 >
                   Activate
                 </button>
               ) : (
                 <button
                   onClick={() => handleStatusChange(user._id, "fraud")}
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded text-xs font-semibold"
+                  className="bg-[#C10007] hover:bg-red-800 text-white px-4 py-2 rounded-xl font-semibold shadow-md transform transition hover:-translate-y-1 hover:shadow-lg"
                 >
                   Mark Fraud
                 </button>

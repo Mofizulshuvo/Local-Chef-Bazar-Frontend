@@ -73,7 +73,7 @@ const UserMyMeal = () => {
             key={order._id}
             className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row items-center gap-6 p-6"
           >
-            {/* Image */}
+     
             <div className="w-full md:w-32 h-32 rounded-xl overflow-hidden shadow-md">
               <img
                 src={order.foodImage || "https://via.placeholder.com/150"}
@@ -82,7 +82,7 @@ const UserMyMeal = () => {
               />
             </div>
 
-            {/* Info */}
+        
             <div className="flex-1 flex flex-col gap-1 text-center md:text-left">
               <h3 className="text-xl font-bold text-black truncate">
                 {order.mealName}
@@ -95,7 +95,7 @@ const UserMyMeal = () => {
               </p>
             </div>
 
-            {/* Status */}
+           
             <div className="flex flex-col items-center gap-2 min-w-[120px]">
               <span className="text-xs uppercase tracking-wide text-black/50">
                 Order
@@ -113,7 +113,7 @@ const UserMyMeal = () => {
               </span>
             </div>
 
-            {/* Payment */}
+          
             <div className="flex flex-col items-center gap-2 min-w-[140px]">
               <span className="text-xs uppercase tracking-wide text-black/50">
                 Payment

@@ -1,65 +1,68 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
+import Loader from "../Loader/Loader";
+import { Link } from "react-router"; 
 
-const Latest6Meal = () => {
+const Latest6Meals = () => {
   const [meals, setMeals] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchLatestMeals = async () => {
+    const fetchMeals = async () => {
       try {
+        setLoading(true);
         const res = await axios.get("http://localhost:3000/meals");
-        setMeals(res.data.slice(-6)); // latest 6 meals
+        setMeals(res.data.slice(0, 8));
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchLatestMeals();
+    fetchMeals();
   }, []);
 
-  if (!meals.length)
-    return <p className="text-center mt-10 text-lg">No Meals available</p>;
+  if (loading) return <Loader />;
 
   return (
-    <div className="px-4 sm:px-6 md:px-10 py-8">
-      <h2 className="text-3xl sm:text-4xl font-bold mb-10 text-center">
-        Latest Meals
+    <section className="mx-auto px-6 py-10">
+      <h2 className="text-3xl font-bold text-center mb-8 text-black">
+        Available Meals
       </h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {meals.map((meal) => (
           <motion.div
             key={meal._id}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            whileHover={{ y: -6, scale: 1.03 }}
-            className="w-[260px] h-[400px]"
+            className="bg-white shadow-xl rounded-2xl h-[450px] overflow-hidden transform hover:scale-105 transition-all flex flex-col"
+            whileHover={{ scale: 1.05 }}
           >
-            <div className="border rounded-xl shadow-md overflow-hidden bg-gray-50 flex flex-col h-full">
-              <div className="h-[65%] overflow-hidden">
-                <img
-                  src={meal.foodImage}
-                  alt={meal.foodName}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                />
-              </div>
-
-              <div className="p-4 flex-1 flex flex-col justify-between">
-                <h3 className="font-bold text-lg truncate">
+            <img
+              src={meal.foodImage}
+              alt={meal.foodName}
+              className="w-full h-6/9 object-cover"
+            />
+            <div className="p-4 text-center flex-1 flex flex-col justify-between">
+              <div>
+                <h3 className="font-semibold text-lg text-black">
                   {meal.foodName}
                 </h3>
-                <p className="text-[#056a89] text-sm truncate">
-                  Chef: {meal.chefName}
+                <p className="text-sm text-gray-500">
+                  {meal.description?.slice(0, 40)}
                 </p>
+                <p className="mt-2 font-bold text-[#C10007]">${meal.price}</p>
               </div>
+              <Link to={`/MealDetails/${meal._id}`}>
+                <button className="mt-4 w-full px-4 py-2 bg-white text-black border border-gray-200 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
+                  View Details
+                </button>
+              </Link>
             </div>
           </motion.div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
-export default Latest6Meal;
+export default Latest6Meals;

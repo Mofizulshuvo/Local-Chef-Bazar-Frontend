@@ -8,17 +8,19 @@ const AdminMyProfile = () => {
   const { UsersAllDataFromDB, setUserAllDataFromDB, token } =
     useContext(AuthContext);
 
+  const [isEdit, setIsEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isEdit, setIsEdit] = useState(false); // 🔥 active/edit state
 
   const { register, handleSubmit, reset } = useForm();
 
-  // Reset form when DB data changes
   useEffect(() => {
     if (UsersAllDataFromDB) {
       reset({
         name: UsersAllDataFromDB?.name || "",
         email: UsersAllDataFromDB?.email || "",
+        phone: UsersAllDataFromDB?.phone || "",
+        status: UsersAllDataFromDB?.status || "",
+        uid: UsersAllDataFromDB?.uid || "",
         profileImage: UsersAllDataFromDB?.profileImage || "",
       });
     }
@@ -32,15 +34,13 @@ const AdminMyProfile = () => {
         `http://localhost:3000/users/${UsersAllDataFromDB.uid}`,
         data,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       toast.success("Profile updated successfully!");
       setUserAllDataFromDB({ ...UsersAllDataFromDB, ...data });
-      setIsEdit(false); // 🔥 back to view mode
+      setIsEdit(false);
     } catch (err) {
       console.error(err);
       toast.error("Failed to update profile");
@@ -50,92 +50,140 @@ const AdminMyProfile = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg mt-8">
-      {/* Header */}
-      <div className="flex justify-between items-center border-b p-6">
-        <h1 className="text-xl font-semibold">Admin Profile</h1>
-
-        {/* Active button (like isActive) */}
-        <button
-          onClick={() => setIsEdit(!isEdit)}
-          className={`px-4 py-2 rounded-lg text-sm font-semibold transition
-            ${
-              isEdit
-                ? "bg-red-500 text-white hover:bg-red-600"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            }
-          `}
-        >
-          {isEdit ? "Cancel Edit" : "Edit Profile"}
-        </button>
+    <div className="w-full max-w-5xl mx-auto p-6">
+      <div className="mb-6 text-center">
+        <h1 className="text-3xl font-bold text-black">Admin Profile</h1>
+        <p className="text-sm text-black/50">Manage your personal information</p>
       </div>
 
-      {/* Body */}
-      <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
+      {/* Profile Card */}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white shadow-2xl rounded-2xl p-6 md:p-10 flex flex-col md:flex-row gap-8"
+      >
         {/* Profile Image */}
-        <div className="flex items-center gap-6">
+        <div className="flex-shrink-0 flex flex-col items-center md:items-start gap-2">
           <img
-            src={
-              UsersAllDataFromDB?.profileImage ||
-              "https://via.placeholder.com/100"
-            }
-            alt="Admin"
-            className="w-24 h-24 rounded-full object-cover border"
+            src={UsersAllDataFromDB?.profileImage || "https://via.placeholder.com/150"}
+            alt="Profile"
+            className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover shadow-lg"
           />
-
           {isEdit && (
             <input
               type="text"
-              {...register("profileImage")}
               placeholder="Profile Image URL"
-              className="flex-1 border rounded-lg px-3 py-2"
+              {...register("profileImage")}
+              className="w-full border rounded-lg px-2 py-1 text-sm shadow-sm focus:ring-2 focus:ring-[#C10007] focus:outline-none"
             />
           )}
         </div>
 
-        {/* Name */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Name</label>
-          <input
-            type="text"
-            {...register("name")}
-            disabled={!isEdit}
-            className={`w-full border rounded-lg px-3 py-2 transition
-              ${!isEdit ? "bg-gray-100 cursor-not-allowed" : ""}
-            `}
-          />
-        </div>
+        {/* Profile Info */}
+        <div className="flex-1 flex flex-col justify-between">
+          <div className="space-y-2">
+            {/* Name */}
+            {isEdit ? (
+              <input
+                type="text"
+                {...register("name")}
+                className="w-full border rounded-lg px-3 py-2 shadow-sm focus:ring-2 focus:ring-[#C10007] focus:outline-none"
+              />
+            ) : (
+              <h2 className="text-2xl font-bold text-black">
+                {UsersAllDataFromDB?.name || "Admin Name"}
+              </h2>
+            )}
 
-        {/* Email */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Email</label>
-          <input
-            type="email"
-            {...register("email")}
-            disabled
-            className="w-full border rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed"
-          />
-        </div>
+            {/* Role */}
+            <p className="text-sm text-black/70 capitalize">
+              {UsersAllDataFromDB?.role || "Admin"}
+            </p>
 
-        {/* Submit */}
-        {isEdit && (
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-lg font-semibold text-white transition
-              ${
-                loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-green-500 hover:bg-green-600"
+            {/* Email */}
+            <p className="text-sm text-black/50">{UsersAllDataFromDB?.email}</p>
+          </div>
+
+          {/* Details Grid */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-black/70">
+            <Info
+              label="UID"
+              value={
+                isEdit ? (
+                  <input
+                    type="text"
+                    {...register("uid")}
+                    className="w-full border rounded-lg px-2 py-1 shadow-sm focus:ring-2 focus:ring-[#C10007] focus:outline-none"
+                  />
+                ) : (
+                  UsersAllDataFromDB?.uid
+                )
               }
-            `}
-          >
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
-        )}
+            />
+            <Info
+              label="Phone"
+              value={
+                isEdit ? (
+                  <input
+                    type="text"
+                    {...register("phone")}
+                    className="w-full border rounded-lg px-2 py-1 shadow-sm focus:ring-2 focus:ring-[#C10007] focus:outline-none"
+                  />
+                ) : (
+                  UsersAllDataFromDB?.phone || "N/A"
+                )
+              }
+            />
+            <Info
+              label="Status"
+              value={
+                isEdit ? (
+                  <input
+                    type="text"
+                    {...register("status")}
+                    className="w-full border rounded-lg px-2 py-1 shadow-sm focus:ring-2 focus:ring-[#C10007] focus:outline-none"
+                  />
+                ) : (
+                  UsersAllDataFromDB?.status || "Active"
+                )
+              }
+            />
+            <Info
+              label="Joined On"
+              value={
+                UsersAllDataFromDB?.createdAt
+                  ? new Date(UsersAllDataFromDB.createdAt).toDateString()
+                  : "N/A"
+              }
+            />
+          </div>
+
+          {/* Action Buttons */}
+          <div className="mt-6 flex gap-4 flex-wrap">
+            <button
+              type={isEdit ? "submit" : "button"}
+              onClick={() => !isEdit && setIsEdit(true)}
+              className="px-6 py-2 bg-[#C10007] text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-transform"
+            >
+              {isEdit ? (loading ? "Saving..." : "Save Changes") : "Edit Profile"}
+            </button>
+            {!isEdit && (
+              <button className="px-6 py-2 bg-black/10 text-black font-semibold rounded-xl hover:bg-black/20 transition-colors">
+                Change Password
+              </button>
+            )}
+          </div>
+        </div>
       </form>
     </div>
   );
 };
+
+/* ---------- Small Info Component ---------- */
+const Info = ({ label, value }) => (
+  <div className="flex flex-col">
+    <span className="text-black/50 text-xs">{label}</span>
+    <span className="font-medium text-black">{value || "-"}</span>
+  </div>
+);
 
 export default AdminMyProfile;
