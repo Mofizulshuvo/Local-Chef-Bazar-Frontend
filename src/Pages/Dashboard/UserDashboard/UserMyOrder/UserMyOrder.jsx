@@ -18,8 +18,7 @@ const UserMyMeal = () => {
         { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
       );
       setOrders(res.data);
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error("Failed to fetch orders.");
     } finally {
       setLoading(false);
@@ -33,10 +32,10 @@ const UserMyMeal = () => {
   const handlePayment = async (orderId) => {
     const confirmPayment = await Swal.fire({
       title: "Confirm Payment",
-      text: "Are you sure you want to complete the payment?",
+      text: "Proceed to payment?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Yes, pay now",
+      confirmButtonText: "Pay Now",
     });
 
     if (!confirmPayment.isConfirmed) return;
@@ -47,12 +46,9 @@ const UserMyMeal = () => {
         { orderId },
         { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
       );
-
-      // Redirect to Stripe checkout
       window.location.href = res.data.url;
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Error", "Payment failed. Please try again.", "error");
+    } catch {
+      Swal.fire("Error", "Payment failed.", "error");
     }
   };
 
@@ -60,85 +56,84 @@ const UserMyMeal = () => {
 
   if (!orders.length)
     return (
-      <div className="flex justify-center items-center h-full mt-10">
-        <p className="text-gray-500 text-lg">You haven't placed any orders yet.</p>
+      <div className="flex justify-center items-center mt-16">
+        <p className="text-black/60 text-lg">No orders yet</p>
       </div>
     );
 
   return (
-    <div className="p-4 sm:p-6 md:p-10 w-full mx-auto">
-      <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-gray-800">
+    <div className="w-full px-6 py-8">
+      <h2 className="text-4xl font-bold text-black text-center mb-10">
         My Orders
       </h2>
 
-      <div className="space-y-4">
+      <div className="space-y-6 max-w-6xl mx-auto">
         {orders.map((order) => (
           <div
             key={order._id}
-            className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-xl transition"
+            className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row items-center gap-6 p-6"
           >
-            
-            <div className="flex justify-center md:justify-start">
+            {/* Image */}
+            <div className="w-full md:w-32 h-32 rounded-xl overflow-hidden shadow-md">
               <img
-                src={order.foodImage || "https://via.placeholder.com/100"}
+                src={order.foodImage || "https://via.placeholder.com/150"}
                 alt={order.mealName}
-                className="w-24 h-24 md:w-28 md:h-28 object-cover rounded-lg"
+                className="w-full h-full object-cover"
               />
             </div>
 
-            
-            <div className="flex flex-col justify-center mx-auto gap-3 text-gray-800 font-semibold text-center md:text-left">
-              <span className="text-sm md:text-base text-gray-700">Food Name</span>
-              <span className="text-lg md:text-xl font-bold">{order.mealName}</span>
+            {/* Info */}
+            <div className="flex-1 flex flex-col gap-1 text-center md:text-left">
+              <h3 className="text-xl font-bold text-black truncate">
+                {order.mealName}
+              </h3>
+              <p className="text-sm text-black/60">
+                Quantity: {order.quantity || 1}
+              </p>
+              <p className="text-sm text-black/60">
+                Total: ${order.price * (order.quantity || 1)}
+              </p>
             </div>
 
-            
-            <div className="flex flex-col mx-auto justify-center gap-3  text-center md:text-left">
-              <span className="text-sm mx-auto text-gray-500">Quantity</span>
-              <span className="text-lg mx-auto font-semibold">{order.quantity || 1}</span>
-            </div>
-
-          
-            <div className="flex flex-col justify-center mx-auto gap-3 text-center md:text-left">
-              <span className="text-sm mx-auto text-gray-500">Total Price</span>
-              <span className="text-lg mx-auto font-semibold">
-                ${order.price * (order.quantity || 1)}
+            {/* Status */}
+            <div className="flex flex-col items-center gap-2 min-w-[120px]">
+              <span className="text-xs uppercase tracking-wide text-black/50">
+                Order
               </span>
-            </div>
-
-            
-            <div className="flex flex-col justify-center mx-auto gap-3 text-center md:text-left">
-              <span className="text-sm mx-auto text-gray-500">Order Status</span>
               <span
-                className={`px-3 py-1 rounded-full text-center mx-auto font-semibold text-sm ${
+                className={`px-4 py-1 rounded-full text-sm font-semibold ${
                   order.orderStatus === "pending"
-                    ? "bg-yellow-100 text-yellow-800"
+                    ? "bg-black/10 text-black"
                     : order.orderStatus === "accepted"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
+                    ? "bg-[#C10007]/10 text-[#C10007]"
+                    : "bg-black text-white"
                 }`}
               >
                 {order.orderStatus}
               </span>
             </div>
 
-            
-            <div className="flex flex-col justify-center text-center gap-3 items-center md:items-start">
-              <span className="text-sm text-gray-500">Payment Status</span>
-              {order.orderStatus === "accepted" && order.paymentStatus !== "paid" ? (
+            {/* Payment */}
+            <div className="flex flex-col items-center gap-2 min-w-[140px]">
+              <span className="text-xs uppercase tracking-wide text-black/50">
+                Payment
+              </span>
+
+              {order.orderStatus === "accepted" &&
+              order.paymentStatus !== "paid" ? (
                 <button
                   onClick={() => handlePayment(order._id)}
-                  className="bg-gradient-to-r from-emerald-400 to-emerald-600 text-white px-4 py-2 rounded-xl font-semibold shadow hover:scale-105 transform transition"
+                  className="px-5 py-2 rounded-xl bg-[#C10007] text-white font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition"
                 >
                   Pay Now
                 </button>
-              ) : (order.orderStatus === "accepted" || order.orderStatus === "delivered" )&& order.paymentStatus === "paid" ? (
-                <span className="px-4 py-2 rounded-xl font-semibold bg-green-100 text-green-800">
+              ) : order.paymentStatus === "paid" ? (
+                <span className="px-4 py-2 rounded-xl bg-black text-white text-sm font-semibold">
                   Paid
                 </span>
               ) : (
-                <span className="px-4 py-2 rounded-xl font-semibold bg-gray-100 text-gray-400">
-                 Chef not accept
+                <span className="px-4 py-2 rounded-xl bg-black/10 text-black/50 text-sm font-semibold">
+                  Waiting
                 </span>
               )}
             </div>

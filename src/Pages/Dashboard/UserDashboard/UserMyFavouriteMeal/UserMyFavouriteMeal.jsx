@@ -44,14 +44,11 @@ const UserMyFavouriteMeal = () => {
 
   const handleDelete = async (mealId) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to remove this meal from favorites?",
+      title: "Remove this meal?",
+      text: "This will be removed from your favorites",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#dc2626",
-      cancelButtonColor: "#6b7280",
-      confirmButtonText: "Yes, remove it!",
-      cancelButtonText: "Cancel",
+      confirmButtonText: "Remove",
     });
 
     if (result.isConfirmed) {
@@ -61,7 +58,7 @@ const UserMyFavouriteMeal = () => {
         });
 
         setFavorites((prev) => prev.filter((meal) => meal._id !== mealId));
-        Swal.fire("Removed!", "Meal has been removed from favorites.", "success");
+        Swal.fire("Removed", "Meal removed from favorites.", "success");
       } catch (err) {
         console.error(err);
         Swal.fire("Error", "Failed to remove favorite.", "error");
@@ -69,40 +66,66 @@ const UserMyFavouriteMeal = () => {
     }
   };
 
-  if (loading) return <Loader></Loader>;
-  if (favorites.length === 0)
-    return <p className="text-center mt-10">You have no favorite meals yet.</p>;
+  if (loading) return <Loader />;
+
+  if (!favorites.length)
+    return (
+      <div className="flex justify-center items-center mt-20">
+        <p className="text-gray-500 text-lg">
+          You have no favorite meals yet
+        </p>
+      </div>
+    );
 
   return (
-    <div className="w-full mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">My Favorite Meals</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div className="w-full px-6 py-8">
+      <h1 className="text-4xl font-bold text-center text-gray-900 mb-10">
+        My Favorite Meals
+      </h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {favorites.map((meal) => (
           <div
             key={meal._id}
-            className="border rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
+            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-[500px]"
           >
-            <img
-              src={meal.foodImage || "https://via.placeholder.com/200"}
-              alt={meal.foodName}
-              className="w-full h-40 object-cover rounded mb-4"
-            />
-            <h2 className="text-lg font-semibold">{meal.foodName}</h2>
-            <p className="text-sm text-gray-500">Chef: {meal.chefName}</p>
-            <p className="text-sm text-gray-500">Price: ${meal.price}</p>
-            <p className="text-sm text-gray-500">Rating: {meal.rating}/5</p>
-            <p className="text-sm text-gray-500 mt-2 truncate">
-              Ingredients: {meal.ingredients}
-            </p>
-            <p className="text-sm text-gray-500">Delivery: {meal.deliveryTime} min</p>
+            {/* Image (2/3 height) */}
+            <div className="relative h-2/3">
+              <img
+                src={meal.foodImage || "https://via.placeholder.com/300"}
+                alt={meal.foodName}
+                className="w-full h-full object-cover"
+              />
 
-            <div className="mt-4 flex items-center justify-between">
-              <FiHeart size={24} className="text-red-500" />
+              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur p-2 rounded-full shadow">
+                <FiHeart className="text-[#C10007]" size={16} />
+              </div>
+            </div>
+
+            {/* Content (1/3 height) */}
+            <div className="h-1/3 px-4 py-3 flex flex-col justify-between">
+              <div className="flex flex-col gap-1">
+                {/* Food name – KEEP FONT */}
+                <h2 className="text-lg font-bold text-gray-900 truncate">
+                  {meal.foodName}
+                </h2>
+
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>{meal.chefName}</span>
+                  <span>${meal.price}</span>
+                </div>
+
+                <p className="text-xs text-gray-400 truncate">
+                  {meal.ingredients}
+                </p>
+              </div>
+
               <button
                 onClick={() => handleDelete(meal._id)}
-                className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                className="mt-2 flex items-center justify-center gap-2 py-2 rounded-xl bg-[#C10007] text-white text-sm font-semibold hover:bg-black transition"
               >
-                <FiTrash2 size={16} /> Remove
+                <FiTrash2 size={14} />
+                Remove
               </button>
             </div>
           </div>

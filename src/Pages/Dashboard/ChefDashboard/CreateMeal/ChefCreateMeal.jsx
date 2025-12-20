@@ -16,6 +16,8 @@ const ChefCreateMeal = () => {
     reset,
   } = useForm();
 
+  const isDisabled = UsersAllDataFromDB.status === "fraud";
+
   const onSubmit = async (data) => {
     if (!data.foodImage || !data.foodImage[0]) {
       toast.error("Please select a food image.");
@@ -38,7 +40,7 @@ const ChefCreateMeal = () => {
       const imageUrl = imgbbRes.data.data.display_url;
       if (!imageUrl) throw new Error("Image upload failed");
 
-      const A = {
+      const mealData = {
         foodName: data.foodName,
         chefName: data.chefName,
         foodImage: imageUrl,
@@ -51,14 +53,13 @@ const ChefCreateMeal = () => {
         email: UsersAllDataFromDB?.email,
       };
 
-      await axios.post("http://localhost:3000/meals", A, {
+      await axios.post("http://localhost:3000/meals", mealData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // toast.success("Meal created successfully!");
       Swal.fire({
         title: "Good job!",
-        text: "Meal created succesfully!",
+        text: "Meal created successfully!",
         icon: "success",
       });
       reset();
@@ -71,121 +72,85 @@ const ChefCreateMeal = () => {
   };
 
   return (
-    <div className="w-3/5 mx-auto bg-white p-6 rounded-xl shadow">
-      <h1 className="text-2xl font-bold mb-4">Create Meal</h1>
+    <div className=" mx-auto w-2/3 mt-10 p-6 bg-white rounded-2xl shadow-2xl">
+      <h1 className="text-3xl text-c font-bold text-center text-black mb-6">Create Meal</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium">Food Name</label>
-          <input
-            type="text"
-            {...register("foodName", { required: "Food name is required" })}
-            className="w-full border rounded-lg px-3 py-2"
+        {/* Food Name */}
+        <InputField
+          label="Food Name"
+          type="text"
+          register={register("foodName", { required: "Food name is required" })}
+          error={errors.foodName?.message}
+        />
+
+        {/* Chef Name */}
+        <InputField
+          label="Chef Name"
+          type="text"
+          value={UsersAllDataFromDB.name}
+          readOnly
+        />
+
+        {/* Food Image */}
+        <InputField
+          label="Food Image"
+          type="file"
+          register={register("foodImage", { required: "Food image is required" })}
+        />
+
+        {/* Price & Rating */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField
+            label="Price"
+            type="number"
+            register={register("price", { required: true })}
           />
-          {errors.foodName && (
-            <p className="text-red-500 text-xs">{errors.foodName.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Chef Name</label>
-          <input
-            type="text"
-            
-            value={UsersAllDataFromDB.name}
-            readOnly
-            className="w-full border rounded-lg px-3 py-2"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Food Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            {...register("foodImage", { required: "Food image is required" })}
-            className="w-full border rounded-lg px-3 py-2"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <label className="block text-sm font-medium">Price</label>
-            <input
-              type="number"
-              {...register("price", { required: true })}
-              className="w-full border rounded-lg px-3 py-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Rating</label>
-            <input
-              type="number"
-              step="0.1"
-              min="0"
-              max="5"
-              {...register("rating", { required: true })}
-              className="w-full border rounded-lg px-3 py-2"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Ingredients</label>
-          <textarea
-            rows="3"
-            {...register("ingredients", { required: true })}
-            className="w-full border rounded-lg px-3 py-2"
+          <InputField
+            label="Rating"
+            type="number"
+            step="0.1"
+            min="0"
+            max="5"
+            register={register("rating", { required: true })}
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <label className="block text-sm font-medium">
-              Delivery Time (min)
-            </label>
-            <input
-              type="number"
-              {...register("deliveryTime", { required: true })}
-              className="w-full border rounded-lg px-3 py-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">
-              Experience (years)
-            </label>
-            <input
-              type="number"
-              {...register("experience", { required: true })}
-              className="w-full border rounded-lg px-3 py-2"
-            />
-          </div>
-        </div>
+        {/* Ingredients */}
+        <InputField
+          label="Ingredients"
+          type="textarea"
+          register={register("ingredients", { required: true })}
+        />
 
-        <div>
-          <label className="block text-sm font-medium">Chef ID</label>
-          <input
-            type="text"
-            value={UsersAllDataFromDB?.chefId}
-            readOnly
-            className="w-full border rounded-lg px-3 py-2 bg-gray-100"
+        {/* Delivery Time & Experience */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField
+            label="Delivery Time (min)"
+            type="number"
+            register={register("deliveryTime", { required: true })}
+          />
+          <InputField
+            label="Experience (years)"
+            type="number"
+            register={register("experience", { required: true })}
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input
-            type="email"
-            value={UsersAllDataFromDB?.email}
-            readOnly
-            className="w-full border rounded-lg px-3 py-2 bg-gray-100"
-          />
-        </div>
+        {/* Chef ID & Email */}
+        <InputField label="Chef ID" type="text" value={UsersAllDataFromDB?.chefId} readOnly />
+        <InputField label="Email" type="email" value={UsersAllDataFromDB?.email} readOnly />
 
+        {/* Submit Button */}
         <button
           type="submit"
-          disabled={loading}
-          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-lg font-semibold transition"
+          disabled={loading || isDisabled}
+          className={`w-full py-3 rounded-xl font-semibold text-white text-lg transition-transform shadow-lg ${
+            isDisabled
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#C10007] hover:bg-black hover:shadow-2xl"
+          }`}
+          title={isDisabled ? "User not approved / flagged as fraud" : ""}
         >
           {loading ? "Creating Meal..." : "Create Meal"}
         </button>
@@ -193,5 +158,29 @@ const ChefCreateMeal = () => {
     </div>
   );
 };
+
+/* ---------- Input Component ---------- */
+const InputField = ({ label, type, register, error, value, readOnly }) => (
+  <div>
+    <label className="block text-sm font-medium text-black/70 mb-1">{label}</label>
+    {type === "textarea" ? (
+      <textarea
+        {...(register || {})}
+        value={value}
+        readOnly={readOnly}
+        className="w-full px-4 py-2 rounded-xl shadow-inner focus:shadow-outline focus:outline-none text-black"
+      />
+    ) : (
+      <input
+        type={type}
+        {...(register || {})}
+        value={value}
+        readOnly={readOnly}
+        className="w-full px-4 py-2 rounded-xl shadow-inner focus:shadow-outline focus:outline-none text-black"
+      />
+    )}
+    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+  </div>
+);
 
 export default ChefCreateMeal;

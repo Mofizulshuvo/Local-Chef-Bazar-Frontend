@@ -3,7 +3,7 @@ import axios from "axios";
 import { AuthContext } from "../../../../Context/AuthContext";
 import Modal from "react-modal";
 
-Modal.setAppElement("#root"); // For accessibility
+Modal.setAppElement("#root");
 
 const ChefOrderRequest = () => {
   const { UsersAllDataFromDB, token } = useContext(AuthContext);
@@ -74,115 +74,98 @@ const ChefOrderRequest = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-6">Loading orders...</p>;
+  if (loading)
+    return <p className="text-center mt-10 text-gray-500">Loading orders...</p>;
+  if (orders.length === 0)
+    return <p className="text-center mt-10 text-gray-500">No orders found.</p>;
 
   return (
-    <div>
-      <h1 className="text-3xl text-center mt-10">
-        Customer's request for meals
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-center text-[#C10007] mb-8">
+        Customer Meal Requests
       </h1>
-      <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {orders.map((order) => (
-          <div key={order._id} className="bg-white shadow rounded-lg p-5">
+          <div
+            key={order._id}
+            className="bg-white rounded-2xl shadow-xl p-5 transform hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 border border-black"
+          >
             <img
-              src={order.foodImage}
-              className="w-full mx-1 my-1 h-[150px] object-cover rounded"
+              src={order.foodImage || "https://via.placeholder.com/200"}
               alt={order.mealName}
+              className="w-full h-40 object-cover rounded-xl mb-4 border border-black"
             />
-            <h3 className="text-xl font-bold">{order.mealName}</h3>
-            <p>
-              <strong>Price:</strong> ৳{order.price}
-            </p>
-            <p>
-              <strong>Quantity:</strong> {order.quantity}
-            </p>
-            <p>
-              <strong>Status:</strong> <StatusBadge status={order.orderStatus} />
-            </p>
-            <p>
-              <strong>User Email:</strong> {order.userEmail}
-            </p>
-            <p>
-              <strong>Order Time:</strong>{" "}
-              {new Date(order.orderTime).toLocaleString()}
-            </p>
-            <p>
-              <strong>Address:</strong> {order.userAddress}
-            </p>
-            <p>
-              <strong>Payment:</strong> {order.paymentStatus}
-            </p>
+            <h3 className="text-xl font-bold text-[#C10007] mb-2">
+              {order.mealName}
+            </h3>
+            <div className="grid grid-cols-2 text-black gap-2 text-sm mb-3">
+              <p>
+                Price: <span className="font-semibold">৳{order.price}</span>
+              </p>
+              <p>
+                Quantity: <span className="font-semibold">{order.quantity}</span>
+              </p>
+              <p>User Email: <span className="font-semibold">{order.userEmail}</span></p>
+              <p>Payment: <span className="font-semibold">{order.paymentStatus}</span></p>
+              <p className="col-span-2">Address: {order.userAddress}</p>
+              <p className="col-span-2">
+                Order Time: {new Date(order.orderTime).toLocaleString()}
+              </p>
+            </div>
+            <StatusBadge status={order.orderStatus} />
 
-            <div className="flex gap-3 mt-4">
-              <button
-                disabled={
-                  order.orderStatus !== "pending" || updatingId === order._id
-                }
+            <div className="flex gap-3 mt-4 justify-center">
+              <ActionButton
                 onClick={() => confirmAction(order, "cancelled")}
-                className={`px-4 py-1 rounded text-white ${
-                  order.orderStatus !== "pending"
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-red-500 hover:bg-red-600"
-                }`}
-              >
-                Cancel
-              </button>
-
-              <button
-                disabled={
-                  order.orderStatus !== "pending" || updatingId === order._id
-                }
+                disabled={order.orderStatus !== "pending" || updatingId === order._id}
+                color="#C10007"
+                label="Cancel"
+              />
+              <ActionButton
                 onClick={() => confirmAction(order, "accepted")}
-                className={`px-4 py-1 rounded text-white ${
-                  order.orderStatus !== "pending"
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-green-500 hover:bg-green-600"
-                }`}
-              >
-                Accept
-              </button>
-
-              <button
-                disabled={
-                  order.orderStatus !== "accepted" || order.paymentStatus!=="paid"|| updatingId === order._id
-                }
+                disabled={order.orderStatus !== "pending" || updatingId === order._id}
+                color="#000000"
+                label="Accept"
+              />
+              <ActionButton
                 onClick={() => confirmAction(order, "delivered")}
-                className={`px-4 py-1 rounded text-white ${
-                  order.orderStatus !== "accepted" || order.paymentStatus!=="paid"
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-500 hover:bg-blue-600"
-                }`}
-              >
-                Deliver
-              </button>
+                disabled={
+                  order.orderStatus !== "accepted" ||
+                  order.paymentStatus !== "paid" ||
+                  updatingId === order._id
+                }
+                color="#C10007"
+                label="Deliver"
+              />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Confirmation Modal */}
       <Modal
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
         contentLabel="Confirm Action"
-        className="bg-white p-6 max-w-md mx-auto mt-40 rounded shadow-lg"
+        className="bg-white p-6 max-w-md mx-auto mt-40 rounded-2xl shadow-2xl border border-black"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       >
-        <h2 className="text-xl font-bold mb-4">Confirm {selectedAction}</h2>
+        <h2 className="text-2xl font-bold text-[#C10007] mb-4">
+          Confirm {selectedAction}
+        </h2>
         <p className="mb-6">
-          Are you sure you want to {selectedAction} this order for "
-          {selectedOrder?.mealName}"?
+          Are you sure you want to <strong>{selectedAction}</strong> this order for "
+          <strong>{selectedOrder?.mealName}</strong>"?
         </p>
         <div className="flex justify-end gap-4">
           <button
             onClick={() => setModalOpen(false)}
-            className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+            className="px-4 py-2 rounded-xl bg-black text-white hover:bg-gray-800"
           >
             Cancel
           </button>
           <button
             onClick={handleUpdateStatus}
-            className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600"
+            className="px-4 py-2 rounded-xl text-white bg-[#C10007] hover:bg-red-800"
           >
             Confirm
           </button>
@@ -193,17 +176,34 @@ const ChefOrderRequest = () => {
 };
 
 const StatusBadge = ({ status }) => {
-  let color = "bg-gray-400";
-  if (status === "pending") color = "bg-yellow-500";
-  else if (status === "accepted") color = "bg-green-500";
-  else if (status === "cancelled") color = "bg-red-500";
-  else if (status === "delivered") color = "bg-blue-500";
+  let color = "bg-black";
+  if (status === "pending") color = "#C10007";
+  else if (status === "accepted") color = "#000000";
+  else if (status === "cancelled") color = "#C10007";
+  else if (status === "delivered") color = "#000000";
 
   return (
-    <span className={`text-white px-2 py-1 rounded text-sm ${color}`}>
-      {status}
+    <span
+      className={`inline-block px-3 py-1 rounded-full text-white font-semibold mt-2 text-sm`}
+      style={{ backgroundColor: color }}
+    >
+      {status.toUpperCase()}
     </span>
   );
 };
+
+const ActionButton = ({ onClick, disabled, color, label }) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    className="px-4 py-2 rounded-xl font-semibold text-white shadow-md transform transition hover:-translate-y-1 hover:shadow-xl"
+    style={{
+      backgroundColor: disabled ? "#9ca3af" : color,
+      cursor: disabled ? "not-allowed" : "pointer",
+    }}
+  >
+    {label}
+  </button>
+);
 
 export default ChefOrderRequest;

@@ -5,6 +5,7 @@ import { FiHeart } from "react-icons/fi";
 import { AuthContext } from "../../Context/AuthContext";
 import Loader from "../../Components/Loader/Loader";
 import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 const Meals = () => {
   const { UsersAllDataFromDB, token } = useContext(AuthContext);
@@ -13,22 +14,16 @@ const Meals = () => {
   const [loading, setLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState("");
 
-  
   const [showModal, setShowModal] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [address, setAddress] = useState("");
 
- 
   useEffect(() => {
     const fetchMeals = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:3000/meals", {
-          headers: token
-            ? { Authorization: `Bearer ${token}` }
-            : undefined,
-        });
+        const response = await axios.get("http://localhost:3000/meals");
         setMeals(response.data);
       } catch (err) {
         console.error(err);
@@ -41,7 +36,6 @@ const Meals = () => {
     fetchMeals();
   }, [token]);
 
- 
   const handleSortChange = (e) => {
     const value = e.target.value;
     setSortOrder(value);
@@ -55,7 +49,6 @@ const Meals = () => {
     setMeals(sortedMeals);
   };
 
- 
   const handleOrder = (meal) => {
     setSelectedMeal(meal);
     setQuantity(1);
@@ -63,7 +56,6 @@ const Meals = () => {
     setShowModal(true);
   };
 
- 
   const confirmOrder = async () => {
     if (!address) {
       toast.error("Please enter delivery address");
@@ -85,7 +77,7 @@ const Meals = () => {
 
     const orderPayload = {
       foodId: selectedMeal._id,
-      foodImage:selectedMeal.foodImage,
+      foodImage: selectedMeal.foodImage,
       mealName: selectedMeal.foodName,
       price: selectedMeal.price,
       quantity: quantity,
@@ -107,7 +99,6 @@ const Meals = () => {
     }
   };
 
-  
   const handleFavorite = async (meal) => {
     try {
       const payload = {
@@ -123,20 +114,30 @@ const Meals = () => {
     }
   };
 
-  if (loading) return <Loader className="items-center" />;
+  if (loading)
+    return (
+      <div className="text-center w-full h-full flex items-center justify-center">
+        <Loader />
+      </div>
+    );
   if (!meals.length)
-    return <p className="text-center mt-10">No meals available.</p>;
+    return (
+      <p className="text-center mt-10 text-black font-semibold">
+        No meals available.
+      </p>
+    );
+
+  const isOrderDisabled = UsersAllDataFromDB.status === "fraud";
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Meals</h1>
-
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-4xl font-bold text-black">Meals</h1>
         <select
           value={sortOrder}
           onChange={handleSortChange}
-          className="border rounded-lg px-4 py-2 text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          className="rounded-lg px-4 py-2 text-sm font-medium bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#C10007] shadow-md"
         >
           <option value="">Sort by price</option>
           <option value="asc">Price: Low → High</option>
@@ -144,100 +145,134 @@ const Meals = () => {
         </select>
       </div>
 
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {/* Meal Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {meals.map((meal) => (
           <div
             key={meal._id}
-            className="border rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col"
+            className="rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 duration-300 flex flex-col bg-white overflow-hidden h-[400px]"
           >
-            <img
-              src={meal.foodImage || "https://via.placeholder.com/200"}
-              alt={meal.foodName}
-              className="w-full h-40 object-cover rounded mb-4"
-            />
+            {/* Image - 2/3 height */}
+            <div className="h-3/5 relative">
+              <img
+                src={meal.foodImage || "https://via.placeholder.com/400"}
+                alt={meal.foodName}
+                className="w-full h-full object-cover"
+              />
+              <button
+                onClick={() => handleFavorite(meal)}
+                className="absolute top-3 right-3 text-[#C10007] bg-white p-2 rounded-full shadow hover:scale-110 transition"
+              >
+                <FiHeart size={20} />
+              </button>
+            </div>
 
-            <h2 className="text-lg font-semibold">{meal.foodName}</h2>
-            <p className="text-sm text-gray-500">Chef: {meal.chefName}</p>
-            <p className="text-sm text-gray-500">Price: ${meal.price}</p>
-            <p className="text-sm text-gray-500">Rating: {meal.rating}/5</p>
-            <p className="text-sm text-gray-500 mt-2 truncate">
-              Ingredients: {meal.ingredients}
-            </p>
-            <p className="text-sm text-gray-500">
-              Delivery: {meal.deliveryTime} min
-            </p>
-
-            {UsersAllDataFromDB?.role !== "admin" &&
-              UsersAllDataFromDB?.role !== "chef" && (
-                <div className="mt-4 flex items-center justify-between">
-                  <button
-                    onClick={() => handleOrder(meal)}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white py-1.5 px-3 rounded-lg text-sm font-semibold transition"
-                  >
-                    Order
-                  </button>
-
-                  <button
-                    onClick={() => handleFavorite(meal)}
-                    className="text-red-500 hover:text-red-600"
-                  >
-                    <FiHeart size={24} />
-                  </button>
+            {/* Details - 1/3 height */}
+            <div className="h-1/3 p-4 flex flex-col justify-between">
+              {/* Text info */}
+              <div className="flex flex-col gap-0.5">
+                <h2 className="text-xl font-bold text-black truncate">
+                  {meal.foodName}
+                </h2>
+                <div className="flex justify-between">
+                  <div>
+                    <p className="text-black/70 text-sm truncate">
+                      Chef: {meal.chefName}
+                    </p>
+                    <p className="text-black/70 text-sm">
+                      Price: ${meal.price}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-black/70 text-sm">
+                      Rating: {meal.rating}/5
+                    </p>
+                    <p className="text-black/70 text-sm truncate">
+                      Ingredients: {meal.ingredients}
+                    </p>
+                  </div>
                 </div>
-              )}
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={() => handleOrder(meal)}
+                  disabled={isOrderDisabled}
+                  className={`flex-1 text-white font-semibold py-1 rounded-lg text-sm transition
+          ${
+            isOrderDisabled
+              ? "bg-black/50 cursor-not-allowed"
+              : "bg-[#C10007] hover:bg-black"
+          }`}
+                >
+                  Order Now
+                </button>
+                <Link to={`/MealDetails/${meal._id}`} className="flex-1">
+                  <button className="w-full border-1 border-gray-300 text-black font-semibold py-1 rounded-lg text-sm hover:bg-[#C10007] transition">
+                    View
+                  </button>
+                </Link>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
-      
+      {/* Modal */}
       {showModal && selectedMeal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Confirm Order</h2>
-
-            <div className="space-y-2 text-sm">
-              <p><b>Name:</b> {UsersAllDataFromDB?.name}</p>
-              <p><b>Email:</b> {UsersAllDataFromDB?.email}</p>
-              <p><b>Meal:</b> {selectedMeal.foodName}</p>
-              <p><b>Price:</b> ${selectedMeal.price}</p>
-
-              <label className="block mt-3">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
+            <h2 className="text-2xl mx-auto text-center font-bold text-black mb-4">
+              Confirm Order
+            </h2>
+            <div className="space-y-3 text-black">
+              <p>
+                <b>Name:</b> {UsersAllDataFromDB?.name}
+              </p>
+              <p>
+                <b>Email:</b> {UsersAllDataFromDB?.email}
+              </p>
+              <p>
+                <b>Meal:</b> {selectedMeal.foodName}
+              </p>
+              <p>
+                <b>Price:</b> ${selectedMeal.price}
+              </p>
+              <label className="block mt-2">
                 Quantity
                 <input
                   type="number"
                   min="1"
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-full border rounded px-3 py-1 mt-1"
+                  className="w-full rounded px-3 py-1 mt-1 focus:outline-none focus:ring-2 focus:ring-[#C10007]"
                 />
               </label>
-
-              <label className="block mt-3">
+              <label className="block mt-2">
                 Delivery Address
                 <textarea
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full border rounded px-3 py-1 mt-1"
+                  className="w-full border-1 border-gray-200 rounded px-3 py-1 mt-1 focus:outline-none focus:ring-2 focus:ring-[#C10007]"
                   rows="3"
+                 
                 />
               </label>
-
               <p className="mt-2 font-semibold">
                 Total Price: ${selectedMeal.price * quantity}
               </p>
             </div>
-
             <div className="flex justify-end gap-3 mt-5">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 rounded bg-gray-300"
+                className="px-4 py-2 rounded-lg bg-black text-white font-semibold hover:bg-[#C10007] transition"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmOrder}
-                className="px-4 py-2 rounded bg-emerald-500 text-white"
+                className="px-4 py-2 rounded-lg bg-[#C10007] text-white font-semibold hover:bg-black transition"
               >
                 Confirm Order
               </button>

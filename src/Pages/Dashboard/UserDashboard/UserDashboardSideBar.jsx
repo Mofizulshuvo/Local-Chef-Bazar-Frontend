@@ -1,59 +1,140 @@
-import React, { useContext } from "react";
-import { NavLink } from "react-router";
+import React, { useContext, useState } from "react";
+import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../../Context/AuthContext";
 import Logo from "../../../Components/Logo/Logo";
 import LogOutButton from "../../../Components/Buttons/LogOutButton";
-import { FiUser, FiShoppingCart, FiHeart, FiStar } from "react-icons/fi";
+import {
+  FiUser,
+  FiShoppingCart,
+  FiHeart,
+  FiStar,
+  FiMenu,
+  FiX,
+  FiHome,
+  FiArrowLeft,
+} from "react-icons/fi";
 
 const UserDashboardSideBar = () => {
   const { UsersAllDataFromDB } = useContext(AuthContext);
-  console.log(UsersAllDataFromDB);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const activeClass = ({ isActive }) =>
     isActive
-      ? "flex items-center gap-3 px-6 py-3 rounded-lg bg-yellow-500 text-white font-semibold transition-all duration-200"
-      : "flex items-center gap-3 px-6 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-all duration-200";
+      ? "flex items-center gap-3 px-5 py-3 rounded-xl bg-[#C10007] text-white font-semibold"
+      : "flex items-center gap-3 px-5 py-3 rounded-xl text-black/70 hover:bg-black/5";
 
-  return (
-    <aside className="w-72 bg-white shadow-lg h-screen flex flex-col justify-between">
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full justify-between">
+      {/* ---------- TOP ---------- */}
       <div>
-        <div className="p-6 flex flex-col items-center border-b">
+        {/* Profile */}
+        <div className="p-6 flex flex-col items-center">
           <Logo />
-          <div className="mt-4 flex flex-col items-center">
-            <img
-              src={UsersAllDataFromDB?.profileImage || "https://via.placeholder.com/80"}
-              alt="Profile"
-              className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
-            />
-            <h2 className="mt-2 text-xl font-semibold text-gray-700">
-              {UsersAllDataFromDB?.name }
-            </h2>
-          </div>
+          <img
+            src={
+              UsersAllDataFromDB?.profileImage ||
+              "https://via.placeholder.com/80"
+            }
+            alt="Profile"
+            className="w-20 h-20 rounded-full object-cover mt-4 shadow-md"
+          />
+          <h2 className="mt-3 text-lg font-bold text-black">
+            {UsersAllDataFromDB?.name}
+          </h2>
+          <p className="text-sm text-black/50 capitalize">
+            {UsersAllDataFromDB?.role}
+          </p>
         </div>
 
-        <nav className="mt-6 flex flex-col gap-2 px-2">
-          <NavLink to="" end className={activeClass}>
-            <FiUser size={20} /> Profile
+        {/* Home & Back */}
+        <div className="flex justify-center gap-6 mb-6">
+          <button onClick={() => navigate(-1)}>
+            <FiArrowLeft
+              size={22}
+              className="text-black/70 hover:text-black"
+            />
+          </button>
+
+          <NavLink to="/">
+            <FiHome size={22} className="text-black/70 hover:text-black" />
+          </NavLink>
+        </div>
+
+        {/* Navigation */}
+        <nav className="px-3 flex flex-col gap-2">
+          <NavLink to="" end className={activeClass} onClick={() => setOpen(false)}>
+            <FiUser size={18} /> Profile
           </NavLink>
 
-          <NavLink to="MyOrder" className={activeClass}>
-            <FiShoppingCart size={20} /> My Orders
+          <NavLink
+            to="MyOrder"
+            className={activeClass}
+            onClick={() => setOpen(false)}
+          >
+            <FiShoppingCart size={18} /> My Orders
           </NavLink>
 
-          <NavLink to="MyFavouriteMeal" className={activeClass}>
-            <FiHeart size={20} /> Favourite Meals
+          <NavLink
+            to="MyFavouriteMeal"
+            className={activeClass}
+            onClick={() => setOpen(false)}
+          >
+            <FiHeart size={18} /> Favourite Meals
           </NavLink>
 
-          <NavLink to="MyReview" className={activeClass}>
-            <FiStar size={20} /> My Reviews
+          <NavLink
+            to="MyReview"
+            className={activeClass}
+            onClick={() => setOpen(false)}
+          >
+            <FiStar size={18} /> My Reviews
           </NavLink>
         </nav>
       </div>
 
-      <div className="p-6 border-t">
-        <LogOutButton className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg transition-all duration-200" />
+      {/* ---------- LOGOUT ---------- */}
+      <div className="p-5">
+        <LogOutButton className="w-full bg-[#C10007] hover:opacity-90 text-white font-semibold py-3 rounded-xl shadow-md transition" />
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* ---------- MOBILE TOP BAR ---------- */}
+      <div className="md:hidden sticky top-0 z-50 bg-white shadow-md px-4 py-3 flex justify-between items-center">
+        <button onClick={() => setOpen(true)}>
+          <FiMenu size={26} className="text-black" />
+        </button>
+        <span className="font-bold text-black">Dashboard</span>
+      </div>
+
+      {/* ---------- OVERLAY ---------- */}
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+        />
+      )}
+
+      {/* ---------- SIDEBAR ---------- */}
+      <aside
+        className={`fixed md:sticky top-0 left-0 h-screen w-72 bg-white shadow-2xl z-50
+        transform transition-transform duration-300
+        ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+      >
+        {/* Close button (mobile) */}
+        <button
+          onClick={() => setOpen(false)}
+          className="absolute top-4 right-4 md:hidden"
+        >
+          <FiX size={22} />
+        </button>
+
+        <SidebarContent />
+      </aside>
+    </>
   );
 };
 

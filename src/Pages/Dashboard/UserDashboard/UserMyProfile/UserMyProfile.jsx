@@ -5,24 +5,18 @@ import axios from "axios";
 const UserMyProfile = () => {
   const { UsersAllDataFromDB } = useContext(AuthContext);
 
-  // State for request data and loading
   const [requestData, setRequestData] = useState(null);
   const [requestLoading, setRequestLoading] = useState(true);
 
-  /* ---------------- FETCH REQUEST STATUS ---------------- */
   const fetchRequestStatus = async () => {
     if (!UsersAllDataFromDB?.uid) return;
-
     setRequestLoading(true);
     try {
       const res = await axios.get(
         `http://localhost:3000/request/${UsersAllDataFromDB.uid}`
       );
-
-      // backend now returns a proper object with requestStatus
       setRequestData(res.data);
-    } catch (error) {
-      // 404 or error = no request found
+    } catch {
       setRequestData(null);
     } finally {
       setRequestLoading(false);
@@ -33,7 +27,6 @@ const UserMyProfile = () => {
     fetchRequestStatus();
   }, [UsersAllDataFromDB?.uid]);
 
-  /* ---------------- REQUEST HANDLERS ---------------- */
   const handleRequestChef = async () => {
     await axios.post("http://localhost:3000/request", {
       uid: UsersAllDataFromDB.uid,
@@ -41,8 +34,6 @@ const UserMyProfile = () => {
       currentRole: UsersAllDataFromDB.role,
       requestFor: "chef",
     });
-
-    // fetch the real backend data again
     await fetchRequestStatus();
   };
 
@@ -53,40 +44,32 @@ const UserMyProfile = () => {
       currentRole: UsersAllDataFromDB.role,
       requestFor: "admin",
     });
-
     await fetchRequestStatus();
   };
 
-  /* ---------------- GUARD ---------------- */
   if (!UsersAllDataFromDB) {
-    return <p className="text-center">Loading profile...</p>;
+    return <p className="text-center text-black">Loading profile...</p>;
   }
 
-  /* ---------------- UI ---------------- */
   return (
-    <div className="w-4/5 flex justify-center">
-      <div className="w-full bg-white shadow-lg rounded-xl p-8">
-
+    <div className="w-full flex justify-center mt-8">
+      <div className="w-full  bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
+        
         {/* Profile Header */}
         <div className="flex flex-col items-center">
-          <img
-            src={
-              UsersAllDataFromDB.profileImage ||
-              "https://via.placeholder.com/150"
-            }
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
-          />
-          <h1 className="mt-4 text-2xl font-bold text-gray-800">
-            {UsersAllDataFromDB.name}
-          </h1>
-          <p className="mt-1 text-gray-500 capitalize">
-            {UsersAllDataFromDB.role}
-          </p>
+          <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg">
+            <img
+              src={UsersAllDataFromDB.profileImage || "https://via.placeholder.com/150"}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <h1 className="mt-4 text-3xl font-bold text-black">{UsersAllDataFromDB.name}</h1>
+          <p className="mt-1 text-[#C10007] uppercase tracking-wide">{UsersAllDataFromDB.role}</p>
         </div>
 
         {/* User Info */}
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
           <Info title="Email" value={UsersAllDataFromDB.email} />
           <Info title="Address" value={UsersAllDataFromDB.address} />
           <Info title="Role" value={UsersAllDataFromDB.role} />
@@ -94,7 +77,7 @@ const UserMyProfile = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-8 flex justify-center gap-4">
+        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
           {requestLoading ? (
             <Button disabled text="Checking request..." />
           ) : requestData?.requestStatus === "pending" ? (
@@ -106,12 +89,12 @@ const UserMyProfile = () => {
               <Button
                 onClick={handleRequestChef}
                 text="Become a Chef"
-                className="bg-yellow-500 hover:bg-yellow-600"
+                className="bg-[#C10007] hover:bg-black shadow-md hover:shadow-lg"
               />
               <Button
                 onClick={handleRequestAdmin}
                 text="Become an Admin"
-                className="bg-blue-500 hover:bg-blue-600"
+                className="bg-black hover:bg-[#C10007] shadow-md hover:shadow-lg"
               />
             </>
           )}
@@ -122,11 +105,10 @@ const UserMyProfile = () => {
 };
 
 /* ---------------- SMALL COMPONENTS ---------------- */
-
 const Info = ({ title, value }) => (
-  <div className="bg-gray-50 p-4 rounded-lg">
-    <h2 className="text-gray-400 text-sm">{title}</h2>
-    <p className="text-gray-700 font-medium">{value || "-"}</p>
+  <div className="bg-black/5 p-4 rounded-xl shadow-inner flex flex-col justify-center items-start hover:shadow-md transition duration-300">
+    <h2 className="text-[#C10007] text-sm uppercase tracking-wide">{title}</h2>
+    <p className="text-black font-medium truncate">{value || "-"}</p>
   </div>
 );
 
@@ -134,9 +116,9 @@ const Button = ({ text, onClick, disabled, className = "" }) => (
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`text-white font-semibold py-2 px-6 rounded-lg ${
+    className={`flex-1 py-2 px-6 rounded-xl text-white font-semibold transition-all duration-300 ${
       disabled
-        ? "bg-gray-400 cursor-not-allowed"
+        ? "bg-black/40 cursor-not-allowed"
         : className
     }`}
   >

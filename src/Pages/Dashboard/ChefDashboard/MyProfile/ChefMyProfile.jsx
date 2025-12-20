@@ -5,89 +5,82 @@ const ChefMyProfile = () => {
   const { UsersAllDataFromDB } = useContext(AuthContext);
 
   return (
-    <div className="w-full">
-      {/* Header */}
-      <div className="mb-4">
-        <h1 className="text-2xl font-semibold text-gray-800">My Profile</h1>
-        <p className="text-sm text-gray-500">Manage your personal information</p>
+    <div className="w-full mx-auto p-6">
+      
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-black text-center">My Profile</h1>
+        <p className="text-sm text-black/50 text-center">Manage your personal information</p>
       </div>
 
       {/* Profile Card */}
-      <div className="bg-white rounded-xl shadow p-6 max-w-4xl">
-        {/* Top Section */}
-        <div className="flex items-center gap-6">
+      <div className="bg-white shadow-2xl rounded-2xl p-6 md:p-10 flex flex-col md:flex-row gap-8">
+        {/* Profile Image */}
+        <div className="flex-shrink-0 flex justify-center md:justify-start">
           <img
             src={
               UsersAllDataFromDB?.profileImage ||
-              "https://via.placeholder.com/120"
+              "https://via.placeholder.com/150"
             }
             alt="Profile"
-            className="w-28 h-28 rounded-full object-cover border"
+            className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover shadow-lg"
           />
+        </div>
 
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800">
+        {/* Profile Info */}
+        <div className="flex-1 flex flex-col justify-between">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-black">
               {UsersAllDataFromDB?.name || "User Name"}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-black/70 capitalize">
               {UsersAllDataFromDB?.role || "User"}
             </p>
-            <p className="text-sm text-gray-500">
-              {UsersAllDataFromDB?.email || "user@email.com"}
-            </p>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <hr className="my-6" />
-
-        {/* Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p className="text-xs text-gray-500">Chef ID</p>
-            <p className="font-medium text-gray-700">
-              {UsersAllDataFromDB?.chefId || "Pending Approval"}
-            </p>
+            <p className="text-sm text-black/50">{UsersAllDataFromDB?.email}</p>
           </div>
 
-          <div>
-            <p className="text-xs text-gray-500">Experience</p>
-            <p className="font-medium text-gray-700">
-              {UsersAllDataFromDB?.experience
-                ? `${UsersAllDataFromDB.experience} years`
-                : "N/A"}
-            </p>
+          {/* Details Grid */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-black/70">
+            <Info label="Chef ID" value={UsersAllDataFromDB?.chefId || "Pending"} />
+            <Info
+              label="Experience"
+              value={
+                UsersAllDataFromDB?.experience
+                  ? `${UsersAllDataFromDB.experience} years`
+                  : "N/A"
+              }
+            />
+            <Info label="Account Status" value={UsersAllDataFromDB?.status || "Active"} />
+            <Info
+              label="Joined On"
+              value={
+                UsersAllDataFromDB?.createdAt
+                  ? new Date(UsersAllDataFromDB.createdAt).toDateString()
+                  : "N/A"
+              }
+            />
           </div>
 
-          <div>
-            <p className="text-xs text-gray-500">Account Status</p>
-            <p className="font-medium text-gray-700">
-              {UsersAllDataFromDB?.status || "Active"}
-            </p>
+          {/* Action Buttons */}
+          <div className="mt-6 flex gap-4 flex-wrap">
+            <button className="px-6 py-2 bg-[#C10007] text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-transform">
+              Edit Profile
+            </button>
+            <button className="px-6 py-2 bg-black/10 text-black font-semibold rounded-xl hover:bg-black/20 transition-colors">
+              Change Password
+            </button>
           </div>
-
-          <div>
-            <p className="text-xs text-gray-500">Joined On</p>
-            <p className="font-medium text-gray-700">
-              {UsersAllDataFromDB?.createdAt
-                ? new Date(UsersAllDataFromDB.createdAt).toDateString()
-                : "N/A"}
-            </p>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="mt-6 flex gap-3">
-          <button className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-semibold">
-            Edit Profile
-          </button>
-          <button className="px-4 py-2 border rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100">
-            Change Password
-          </button>
         </div>
       </div>
     </div>
   );
 };
+
+/* ---------- Small Info Component ---------- */
+const Info = ({ label, value }) => (
+  <div className="flex flex-col">
+    <span className="text-black/50 text-xs">{label}</span>
+    <span className="font-medium text-black">{value || "-"}</span>
+  </div>
+);
 
 export default ChefMyProfile;

@@ -2,13 +2,14 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../../../Context/AuthContext";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import Loader from "../../../../Components/Loader/Loader";
 
 const AdminManageUser = () => {
   const { token } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch users
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -17,124 +18,130 @@ const AdminManageUser = () => {
     try {
       setLoading(true);
       const res = await axios.get("http://localhost:3000/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
     } catch (err) {
-      console.error(err);
       toast.error("Failed to load users");
     } finally {
       setLoading(false);
     }
   };
 
-  // Update user role
-  const handleRoleChange = async (uid, role) => {
+  const handleStatusChange = async (userId, status) => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text:
+        status === "fraud"
+          ? "This user will be marked as fraud!"
+          : "This user will be activated!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, continue",
+    });
+
+    if (!confirm.isConfirmed) return;
+
     try {
       await axios.put(
-        `http://localhost:3000/users/${uid}/role`,
-        { role },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `http://localhost:3000/users/${userId}/status`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success("Role updated");
-      fetchUsers();
+
+      setUsers((prev) =>
+        prev.map((u) => (u._id === userId ? { ...u, status } : u))
+      );
+
+      toast.success(`User marked as ${status}`);
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to update role");
+      toast.error("Failed to update user status");
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-gray-500">Loading users...</p>
+      <div className="flex justify-center items-center mx-auto my-auto h-64">
+        <Loader className="mx-auto flex justify-center items-center" />
       </div>
     );
   }
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow">
-      <h1 className="text-xl font-semibold mb-4">Manage Users</h1>
+    <div className="bg-white p-6 w-full rounded-2xl mx-auto shadow-lg">
+      <h1 className="text-3xl font-bold mb-10 mx-auto text-center ">Manage Users</h1>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-200 rounded-lg">
-          <thead className="bg-gray-100">
-            <tr className="text-left text-sm text-gray-600">
-              <th className="px-4 py-3">#</th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Role</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Chef ID</th>
-              <th className="px-4 py-3 text-center">Action</th>
-            </tr>
-          </thead>
+  
+      <div className="grid grid-cols-6  gap-4 text-gray-500 font-semibold pb-2 mb-4 px-2">
+        <div className="text-center">No</div>
+        <div className="text-center">User</div>
+        <div className="text-center">Email</div>
+        <div className="text-center">Role</div>
+        <div className="text-center">Status</div>
+        <div className="text-center">Action</div>
+      </div>
 
-          <tbody>
-            {users.map((user, index) => (
-              <tr
-                key={user._id}
-                className="border-t text-sm hover:bg-gray-50"
+     
+      <div className="space-y-4">
+        {users.map((user, index) => (
+          <div
+            key={user._id}
+            className="grid grid-cols-6 gap-4 bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-xl transition items-center"
+          >
+            <div className="text-gray-400 mx-auto ">{index + 1}</div>
+
+            <div className="flex mx-auto items-center gap-3">
+            
+              <span className="font-medium mx-auto ">{user.name || "N/A"}</span>
+            </div>
+
+            <div className="text-gray-600 mx-auto">{user.email}</div>
+
+            <div className="text-center">
+              <span
+                className={`px-2 py-1 rounded text-xs mx-auto font-semibold ${
+                  user.role === "admin"
+                    ? "bg-blue-100 text-blue-600"
+                    : user.role === "chef"
+                    ? "bg-green-100 text-green-600"
+                    : "bg-gray-100 text-gray-600"
+                }`}
               >
-                <td className="px-4 py-3">{index + 1}</td>
-                <td className="px-4 py-3 font-medium">{user.name}</td>
-                <td className="px-4 py-3">{user.email}</td>
+                {user.role}
+              </span>
+            </div>
 
-                <td className="px-4 py-3 capitalize">
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-semibold
-                      ${
-                        user.role === "admin"
-                          ? "bg-blue-100 text-blue-600"
-                          : user.role === "chef"
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-100 text-gray-600"
-                      }`}
-                  >
-                    {user.role}
-                  </span>
-                </td>
+            <div className="text-center">
+              <span
+                className={`px-2 py-1 rounded text-xs mx-auto font-semibold ${
+                  user.status === "fraud"
+                    ? "bg-red-100 text-red-600"
+                    : "bg-green-100 text-green-600"
+                }`}
+              >
+                {user.status || "active"}
+              </span>
+            </div>
 
-                <td className="px-4 py-3">
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-semibold
-                      ${
-                        user.status === "active"
-                          ? "bg-green-100 text-green-600"
-                          : "bg-red-100 text-red-600"
-                      }`}
-                  >
-                    {user.status || "active"}
-                  </span>
-                </td>
-
-                <td className="px-4 py-3 text-xs">
-                  {user.chefId || "—"}
-                </td>
-
-                <td className="px-4 py-3 text-center">
-                  <select
-                    value={user.role}
-                    onChange={(e) =>
-                      handleRoleChange(user.uid, e.target.value)
-                    }
-                    className="border rounded px-2 py-1 text-sm focus:outline-none"
-                  >
-                    <option value="user">User</option>
-                    <option value="chef">Chef</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            <div className="text-center mx-auto">
+              {user.status === "fraud" ? (
+                <button
+                  onClick={() => handleStatusChange(user._id, "active")}
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded text-xs font-semibold"
+                >
+                  Activate
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleStatusChange(user._id, "fraud")}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded text-xs font-semibold"
+                >
+                  Mark Fraud
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

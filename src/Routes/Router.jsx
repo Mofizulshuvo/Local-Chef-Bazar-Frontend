@@ -1,3 +1,4 @@
+import React from "react";
 import { createBrowserRouter } from "react-router";
 import MainLayout from "../Layouts/MainLayout";
 import Error from "../Pages/Error/Error";
@@ -21,8 +22,8 @@ import ChefMyProfile from "../Pages/Dashboard/ChefDashboard/MyProfile/ChefMyProf
 import ChefMyMeal from "../Pages/Dashboard/ChefDashboard/MyMeal/ChefMyMeal";
 import ChefCreateMeal from "../Pages/Dashboard/ChefDashboard/CreateMeal/ChefCreateMeal";
 import ChefOrderRequest from "../Pages/Dashboard/ChefDashboard/OrderRequest/ChefOrderRequest";
-import UserDashboard from "../Pages/Dashboard/UserDashboard/UserDashboard";
 import PaymentSuccess from "../Pages/PaymentSuccess/PaymentSuccess";
+import MealDetails from "../Components/MealDetails/MealDetails";
 
 export const router = createBrowserRouter([
   {
@@ -34,53 +35,29 @@ export const router = createBrowserRouter([
       { path: "/Meals", element: <Meals /> },
       { path: "/SignUp", element: <SignUp /> },
       { path: "/SignIn", element: <SignIn /> },
+      {
+        path: "/MealDetails/:id",
+        element: (
+          <PrivateRouter>
+            <MealDetails />
+          </PrivateRouter>
+        ),
+      },
     ],
   },
-  {
-        path:"paymentSuccess",
-        element:<PaymentSuccess></PaymentSuccess>
-  },
+  { path: "/paymentSuccess", element: <PaymentSuccess /> },
   {
     path: "/Dashboard",
     element: (
       <PrivateRouter>
-        <UserDashboard />
+        <Dashboard />
       </PrivateRouter>
     ),
     children: [
-      {
-        path: "",
-        element: (
-          <PrivateRouter>
-            <UserMyProfile />
-          </PrivateRouter>
-        ),
-      },
-      {
-        path: "MyOrder",
-        element: (
-          <PrivateRouter>
-            <UserMyOrder />
-          </PrivateRouter>
-        ),
-      },
-      
-      {
-        path: "MyFavouriteMeal",
-        element: (
-          <PrivateRouter>
-            <UserMyFavouriteMeal />
-          </PrivateRouter>
-        ),
-      },
-      {
-        path: "MyReview",
-        element: (
-          <PrivateRouter>
-            <UserMyReview />
-          </PrivateRouter>
-        ),
-      },
+      { path: "", element: <UserMyProfile /> },
+      { path: "MyOrder", element: <UserMyOrder /> },
+      { path: "MyFavouriteMeal", element: <UserMyFavouriteMeal /> },
+      { path: "MyReview", element: <UserMyReview /> },
     ],
   },
   {
@@ -91,38 +68,10 @@ export const router = createBrowserRouter([
       </PrivateRouter>
     ),
     children: [
-      {
-        path: "",
-        element: (
-         
-            <AdminMyProfile />
-          
-        ),
-      },
-      {
-        path: "ManageUser",
-        element: (
-          <PrivateRouter>
-            <AdminManageUser />
-          </PrivateRouter>
-        ),
-      },
-      {
-        path: "ManageRequest",
-        element: (
-          <PrivateRouter>
-            <AdminManageRequest />
-          </PrivateRouter>
-        ),
-      },
-      {
-        path: "PlatformStatistics",
-        element: (
-          <PrivateRouter>
-            <AdminPlatformStatistics />
-          </PrivateRouter>
-        ),
-      },
+      { path: "", element: <AdminMyProfile /> },
+      { path: "ManageUser", element: <AdminManageUser /> },
+      { path: "ManageRequest", element: <AdminManageRequest /> },
+      { path: "PlatformStatistics", element: <AdminPlatformStatistics /> },
     ],
   },
   {
@@ -133,38 +82,10 @@ export const router = createBrowserRouter([
       </PrivateRouter>
     ),
     children: [
-      {
-        path: "",
-        element: (
-          <PrivateRouter>
-            <ChefMyProfile />
-          </PrivateRouter>
-        ),
-      },
-      {
-        path: "MyMeal",
-        element: (
-          <PrivateRouter>
-            <ChefMyMeal />
-          </PrivateRouter>
-        ),
-      },
-      {
-        path: "CreateMeal",
-        element: (
-          <PrivateRouter>
-            <ChefCreateMeal />
-          </PrivateRouter>
-        ),
-      },
-      {
-        path: "OrderRequest",
-        element: (
-          <PrivateRouter>
-            <ChefOrderRequest />
-          </PrivateRouter>
-        ),
-      },
+      { path: "", element: <ChefMyProfile /> },
+      { path: "MyMeal", element: <ChefMyMeal /> },
+      { path: "CreateMeal", element: <ChefCreateMeal /> },
+      { path: "OrderRequest", element: <ChefOrderRequest /> },
     ],
   },
 ]);
