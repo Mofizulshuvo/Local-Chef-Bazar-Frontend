@@ -7,11 +7,9 @@ const LogOutButton = () => {
       LogOut();
     }
   return (
-    <div>
-      <button onClick={()=>handleLogOut()} className="px-4 py-2  bg-[#C10007] text-lg text-white rounded-2xl">
-        Log Out
-      </button>
-    </div>
+    <button onClick={()=>handleLogOut()} className="btn-outline">
+      Log Out
+    </button>
   );
 };
 

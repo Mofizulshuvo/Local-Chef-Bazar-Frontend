@@ -18,9 +18,10 @@ const ChefOrderRequest = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("https://local-chef-bazar-backend-1.onrender.com/orders", {
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        });
+        const res = await axios.get(
+          "https://local-chef-bazar-backend-1.onrender.com/orders",
+          { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
+        );
 
         const chefOrders = res.data.filter(
           (order) =>
@@ -80,25 +81,25 @@ const ChefOrderRequest = () => {
     return <p className="text-center mt-10 text-gray-500">No orders found.</p>;
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6 md:p-8">
       <h1 className="text-3xl font-bold text-center text-[#C10007] mb-8">
         Customer Meal Requests
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {orders.map((order) => (
           <div
             key={order._id}
-            className="bg-white rounded-2xl shadow-xl p-5 transform hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 border border-black"
+            className="bg-white rounded-2xl shadow-xl p-4 sm:p-5 transform hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 border border-black flex flex-col"
           >
             <img
               src={order.foodImage || "https://via.placeholder.com/200"}
               alt={order.mealName}
-              className="w-full h-40 object-cover rounded-xl mb-4 border border-black"
+              className="w-full h-40 sm:h-48 object-cover rounded-xl mb-4 border border-black"
             />
-            <h3 className="text-xl font-bold text-[#C10007] mb-2">
+            <h3 className="text-xl font-bold text-[#C10007] mb-2 text-center sm:text-left">
               {order.mealName}
             </h3>
-            <div className="grid grid-cols-2 text-black gap-2 text-sm mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-black mb-3">
               <p>
                 Price: <span className="font-semibold">৳{order.price}</span>
               </p>
@@ -107,14 +108,14 @@ const ChefOrderRequest = () => {
               </p>
               <p>User Email: <span className="font-semibold">{order.userEmail}</span></p>
               <p>Payment: <span className="font-semibold">{order.paymentStatus}</span></p>
-              <p className="col-span-2">Address: {order.userAddress}</p>
-              <p className="col-span-2">
+              <p className="col-span-1 sm:col-span-2">Address: {order.userAddress}</p>
+              <p className="col-span-1 sm:col-span-2">
                 Order Time: {new Date(order.orderTime).toLocaleString()}
               </p>
             </div>
             <StatusBadge status={order.orderStatus} />
 
-            <div className="flex gap-3 mt-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 mt-4 justify-center">
               <ActionButton
                 onClick={() => confirmAction(order, "cancelled")}
                 disabled={order.orderStatus !== "pending" || updatingId === order._id}
@@ -147,25 +148,25 @@ const ChefOrderRequest = () => {
         onRequestClose={() => setModalOpen(false)}
         contentLabel="Confirm Action"
         className="bg-white p-6 max-w-md mx-auto mt-40 rounded-2xl shadow-2xl border border-black"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
       >
         <h2 className="text-2xl font-bold text-[#C10007] mb-4">
           Confirm {selectedAction}
         </h2>
-        <p className="mb-6">
+        <p className="mb-6 text-sm sm:text-base">
           Are you sure you want to <strong>{selectedAction}</strong> this order for "
           <strong>{selectedOrder?.mealName}</strong>"?
         </p>
-        <div className="flex justify-end gap-4">
+        <div className="flex flex-col sm:flex-row justify-end gap-4">
           <button
             onClick={() => setModalOpen(false)}
-            className="px-4 py-2 rounded-xl bg-black text-white hover:bg-gray-800"
+            className="btn-outline w-full sm:w-auto"
           >
             Cancel
           </button>
           <button
             onClick={handleUpdateStatus}
-            className="px-4 py-2 rounded-xl text-white bg-[#C10007] hover:bg-red-800"
+            className="btn-primary w-full sm:w-auto"
           >
             Confirm
           </button>
@@ -184,7 +185,7 @@ const StatusBadge = ({ status }) => {
 
   return (
     <span
-      className={`inline-block px-3 py-1 rounded-full text-white font-semibold mt-2 text-sm`}
+      className={`inline-block px-3 py-1 rounded-full text-white font-semibold mt-2 text-sm text-center`}
       style={{ backgroundColor: color }}
     >
       {status.toUpperCase()}
@@ -196,7 +197,7 @@ const ActionButton = ({ onClick, disabled, color, label }) => (
   <button
     onClick={onClick}
     disabled={disabled}
-    className="px-4 py-2 rounded-xl font-semibold text-white shadow-md transform transition hover:-translate-y-1 hover:shadow-xl"
+    className="px-4 py-2 rounded-xl font-semibold text-white shadow-md transform transition hover:-translate-y-1 hover:shadow-xl w-full sm:w-auto"
     style={{
       backgroundColor: disabled ? "#9ca3af" : color,
       cursor: disabled ? "not-allowed" : "pointer",

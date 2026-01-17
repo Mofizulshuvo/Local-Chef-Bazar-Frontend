@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import Loader from "../Loader/Loader";
 
 const OurChefs = () => {
   const [chefs, setChefs] = useState([]);
@@ -31,7 +32,7 @@ const OurChefs = () => {
   if (loading) {
     return (
       <div className="text-center py-12 text-gray-500">
-        Loading chefs...
+        <Loader></Loader>;
       </div>
     );
   }
@@ -65,7 +66,7 @@ const OurChefs = () => {
             </h3>
 
             <p className="text-sm text-gray-500 mt-1">
-              📍 {chef.address || "Bangladesh"}
+             {chef.address || "Bangladesh"}
             </p>
 
             <span className="mt-3 text-xs font-medium px-3 py-1 rounded-full bg-red-50 text-[#C10007]">

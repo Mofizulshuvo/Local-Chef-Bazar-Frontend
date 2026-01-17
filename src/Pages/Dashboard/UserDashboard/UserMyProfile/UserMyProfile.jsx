@@ -48,28 +48,27 @@ const UserMyProfile = () => {
   };
 
   if (!UsersAllDataFromDB) {
-    return <p className="text-center text-black">Loading profile...</p>;
+    return <p className="text-center text-black mt-8">Loading profile...</p>;
   }
 
   return (
-    <div className="w-full flex justify-center mt-8">
-      <div className="w-full  bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
-        
-        {/* Profile Header */}
+    <div className="w-full px-4 sm:px-6 flex justify-center mt-8">
+      <div className="w-full max-w-4xl bg-white rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
+        {/* Profile Image and Name */}
         <div className="flex flex-col items-center">
-          <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg">
+          <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden shadow-lg">
             <img
               src={UsersAllDataFromDB.profileImage || "https://via.placeholder.com/150"}
               alt="Profile"
               className="w-full h-full object-cover"
             />
           </div>
-          <h1 className="mt-4 text-3xl font-bold text-black">{UsersAllDataFromDB.name}</h1>
-          <p className="mt-1 text-[#C10007] uppercase tracking-wide">{UsersAllDataFromDB.role}</p>
+          <h1 className="mt-4 text-2xl sm:text-3xl font-bold text-black text-center">{UsersAllDataFromDB.name}</h1>
+          <p className="mt-1 text-[#C10007] uppercase tracking-wide text-sm sm:text-base">{UsersAllDataFromDB.role}</p>
         </div>
 
-        {/* User Info */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Info Grid */}
+        <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <Info title="Email" value={UsersAllDataFromDB.email} />
           <Info title="Address" value={UsersAllDataFromDB.address} />
           <Info title="Role" value={UsersAllDataFromDB.role} />
@@ -77,7 +76,7 @@ const UserMyProfile = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+        <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-center gap-4">
           {requestLoading ? (
             <Button disabled text="Checking request..." />
           ) : requestData?.requestStatus === "pending" ? (
@@ -89,12 +88,12 @@ const UserMyProfile = () => {
               <Button
                 onClick={handleRequestChef}
                 text="Become a Chef"
-                className="bg-[#C10007] hover:bg-black shadow-md hover:shadow-lg"
+                className="btn-primary"
               />
               <Button
                 onClick={handleRequestAdmin}
                 text="Become an Admin"
-                className="bg-black hover:bg-[#C10007] shadow-md hover:shadow-lg"
+                className="btn-outline"
               />
             </>
           )}
@@ -104,11 +103,10 @@ const UserMyProfile = () => {
   );
 };
 
-/* ---------------- SMALL COMPONENTS ---------------- */
 const Info = ({ title, value }) => (
   <div className="bg-black/5 p-4 rounded-xl shadow-inner flex flex-col justify-center items-start hover:shadow-md transition duration-300">
-    <h2 className="text-[#C10007] text-sm uppercase tracking-wide">{title}</h2>
-    <p className="text-black font-medium truncate">{value || "-"}</p>
+    <h2 className="text-[#C10007] text-xs sm:text-sm uppercase tracking-wide">{title}</h2>
+    <p className="text-black font-medium truncate text-sm sm:text-base">{value || "-"}</p>
   </div>
 );
 
@@ -116,10 +114,8 @@ const Button = ({ text, onClick, disabled, className = "" }) => (
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`flex-1 py-2 px-6 rounded-xl text-white font-semibold transition-all duration-300 ${
-      disabled
-        ? "bg-black/40 cursor-not-allowed"
-        : className
+    className={`flex-1 py-2 px-6 rounded-xl text-white font-semibold transition-all duration-300 text-sm sm:text-base ${
+      disabled ? "bg-gray-400 cursor-not-allowed" : className
     }`}
   >
     {text}

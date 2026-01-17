@@ -11,22 +11,23 @@ import { AuthContext } from "./AuthContext";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 const AuthProvider = ({ children }) => {
-  const [loading, setLoading] = useState(false);
+
+  
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
   const googleProvider = new GoogleAuthProvider();
 
-  // Sign up with email & password
+  
   const SignUpwithEmailAndPassword = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         toast.success("You signed up successfully!");
-        return userCredential; // return to get UID
-        
-        
+        return userCredential;
       })
       .catch((error) => {
         toast.error(error.message);
@@ -35,7 +36,7 @@ const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
   };
 
-  // Sign in with email & password
+ 
   const SignInwithEmailAndPassword = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password)
@@ -50,7 +51,7 @@ const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
   };
 
-  // Sign in with Google
+  
   const SignInwithGoogle = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider)
@@ -66,12 +67,13 @@ const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
   };
 
-  // Logout
+  
   const LogOut = () => {
     setLoading(true);
     return signOut(auth)
       .then(() => {
         toast.success("Logged out successfully!");
+        
       })
       .catch((error) => {
         toast.error(error.message);
@@ -80,36 +82,37 @@ const AuthProvider = ({ children }) => {
       .finally(() => setLoading(false));
   };
 
-  // Track auth state
-  const [UsersAllDataFromDB,setUserAllDataFromDB]=useState("");
-  const [userRole,setUserRole]=useState("user");
-  const [token,setToken]=useState("");
- useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-    setUser(currentUser);
+  const [UsersAllDataFromDB, setUserAllDataFromDB] = useState("");
+  const [userRole, setUserRole] = useState("user");
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
 
-    if (currentUser) {
-      try {
-        const { data } = await axios.get(
-          `https://local-chef-bazar-backend-1.onrender.com/users/${currentUser.uid}`
-        );
-        setUserAllDataFromDB(data);
-        setUserRole(data.role || "user");
+      if (currentUser) {
+        try {
+          const { data } = await axios.get(
+            `https://local-chef-bazar-backend-1.onrender.com/users/${currentUser.uid}`
+          );
+          setUserAllDataFromDB(data);
+          setUserRole(data.role || "user");
+        } catch (error) {
+          console.log("Error fetching user role:", error.message);
+          setUserRole("user");
+        }
 
-      } catch (error) {
-        console.log("Error fetching user role:", error.message);
-        setUserRole("user");
-      }
-    } else {
-      setUserRole("user");
-    }
-    const idToken = await currentUser.getIdToken();
+        const idToken = await currentUser.getIdToken();
         setToken(idToken);
-  });
+      } else {
+        setUserRole("user");
+        setToken("");
+      }
 
-  return () => unsubscribe();
-}, []);
+      setLoading(false);
+    });
 
+    return () => unsubscribe();
+  }, []);
 
   const value = {
     user,
@@ -123,9 +126,7 @@ const AuthProvider = ({ children }) => {
     setUserAllDataFromDB,
     userRole,
     token,
-
   };
-
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

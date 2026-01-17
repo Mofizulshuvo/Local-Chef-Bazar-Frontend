@@ -61,7 +61,7 @@ const AdminMyProfile = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white shadow-2xl rounded-2xl p-6 md:p-10 flex flex-col md:flex-row gap-8"
       >
-        {/* Profile Image */}
+        
         <div className="flex-shrink-0 flex flex-col items-center md:items-start gap-2">
           <img
             src={UsersAllDataFromDB?.profileImage || "https://via.placeholder.com/150"}
@@ -78,10 +78,10 @@ const AdminMyProfile = () => {
           )}
         </div>
 
-        {/* Profile Info */}
+ 
         <div className="flex-1 flex flex-col justify-between">
           <div className="space-y-2">
-            {/* Name */}
+         
             {isEdit ? (
               <input
                 type="text"
@@ -94,16 +94,16 @@ const AdminMyProfile = () => {
               </h2>
             )}
 
-            {/* Role */}
+         
             <p className="text-sm text-black/70 capitalize">
               {UsersAllDataFromDB?.role || "Admin"}
             </p>
 
-            {/* Email */}
+           
             <p className="text-sm text-black/50">{UsersAllDataFromDB?.email}</p>
           </div>
 
-          {/* Details Grid */}
+         
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-black/70">
             <Info
               label="UID"
@@ -157,7 +157,7 @@ const AdminMyProfile = () => {
             />
           </div>
 
-          {/* Action Buttons */}
+        
           <div className="mt-6 flex gap-4 flex-wrap">
             <button
               type={isEdit ? "submit" : "button"}
@@ -178,7 +178,7 @@ const AdminMyProfile = () => {
   );
 };
 
-/* ---------- Small Info Component ---------- */
+
 const Info = ({ label, value }) => (
   <div className="flex flex-col">
     <span className="text-black/50 text-xs">{label}</span>

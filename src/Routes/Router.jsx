@@ -24,6 +24,8 @@ import ChefCreateMeal from "../Pages/Dashboard/ChefDashboard/CreateMeal/ChefCrea
 import ChefOrderRequest from "../Pages/Dashboard/ChefDashboard/OrderRequest/ChefOrderRequest";
 import PaymentSuccess from "../Pages/PaymentSuccess/PaymentSuccess";
 import MealDetails from "../Components/MealDetails/MealDetails";
+import About from "../Pages/About/About";
+import Contact from "../Pages/Contact/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -33,15 +35,13 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/Meals", element: <Meals /> },
+      { path: "/about", element: <About /> },
+      { path: "/contact", element: <Contact /> },
       { path: "/SignUp", element: <SignUp /> },
       { path: "/SignIn", element: <SignIn /> },
       {
         path: "/MealDetails/:id",
-        element: (
-          <PrivateRouter>
-            <MealDetails />
-          </PrivateRouter>
-        ),
+        element: <MealDetails />,
       },
     ],
   },
@@ -49,7 +49,7 @@ export const router = createBrowserRouter([
   {
     path: "/Dashboard",
     element: (
-      <PrivateRouter>
+      <PrivateRouter allowedRoles={["user"]}>
         <Dashboard />
       </PrivateRouter>
     ),
@@ -63,7 +63,7 @@ export const router = createBrowserRouter([
   {
     path: "/AdminDashboard",
     element: (
-      <PrivateRouter>
+      <PrivateRouter allowedRoles={["admin"]}>
         <AdminDashboard />
       </PrivateRouter>
     ),
@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
   {
     path: "/ChefDashboard",
     element: (
-      <PrivateRouter>
+      <PrivateRouter allowedRoles={["chef"]}>
         <ChefDashboard />
       </PrivateRouter>
     ),

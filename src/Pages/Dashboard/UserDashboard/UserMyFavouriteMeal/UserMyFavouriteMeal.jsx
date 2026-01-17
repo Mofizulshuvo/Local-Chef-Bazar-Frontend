@@ -2,9 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../../../Context/AuthContext";
 import { toast } from "react-toastify";
-import { FiHeart, FiTrash2 } from "react-icons/fi";
+import { FiTrash2 } from "react-icons/fi";
 import Swal from "sweetalert2";
 import Loader from "../../../../Components/Loader/Loader";
+import { VscHeartFilled } from "react-icons/vsc";
 
 const UserMyFavouriteMeal = () => {
   const { UsersAllDataFromDB, token } = useContext(AuthContext);
@@ -17,12 +18,16 @@ const UserMyFavouriteMeal = () => {
     try {
       setLoading(true);
 
-      const favRes = await axios.get("https://local-chef-bazar-backend-1.onrender.com/favorites");
+      const favRes = await axios.get(
+        "https://local-chef-bazar-backend-1.onrender.com/favorites"
+      );
       const userFavorites = favRes.data.filter(
         (fav) => fav.userEmail === UsersAllDataFromDB.email
       );
 
-      const mealRes = await axios.get("https://local-chef-bazar-backend-1.onrender.com/meals");
+      const mealRes = await axios.get(
+        "https://local-chef-bazar-backend-1.onrender.com/meals"
+      );
       const meals = mealRes.data;
 
       const favMeals = meals.filter((meal) =>
@@ -53,9 +58,12 @@ const UserMyFavouriteMeal = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`https://local-chef-bazar-backend-1.onrender.com/favorites/${mealId}`, {
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        });
+        await axios.delete(
+          `https://local-chef-bazar-backend-1.onrender.com/favorites/${mealId}`,
+          {
+            headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          }
+        );
 
         setFavorites((prev) => prev.filter((meal) => meal._id !== mealId));
         Swal.fire("Removed", "Meal removed from favorites.", "success");
@@ -70,24 +78,24 @@ const UserMyFavouriteMeal = () => {
 
   if (!favorites.length)
     return (
-      <div className="flex justify-center items-center mt-20">
-        <p className="text-gray-500 text-lg">
+      <div className="flex justify-center items-center mt-20 px-4">
+        <p className="text-gray-500 text-lg text-center max-w-md mx-auto">
           You have no favorite meals yet
         </p>
       </div>
     );
 
   return (
-    <div className="w-full px-6 py-8">
-      <h1 className="text-4xl font-bold text-center text-gray-900 mb-10">
+    <div className="w-full px-4 sm:px-6 py-8 flex flex-col items-center">
+      <h1 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-8 sm:mb-10">
         My Favorite Meals
       </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
         {favorites.map((meal) => (
           <div
             key={meal._id}
-            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-[500px]"
+            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-[450px] sm:h-[480px] lg:h-[500px]"
           >
             {/* Image (2/3 height) */}
             <div className="relative h-2/3">
@@ -98,24 +106,23 @@ const UserMyFavouriteMeal = () => {
               />
 
               <div className="absolute top-3 right-3 bg-white/90 backdrop-blur p-2 rounded-full shadow">
-                <FiHeart className="text-[#C10007]" size={16} />
+                <VscHeartFilled className="text-[#C10007]" size={16} />
               </div>
             </div>
 
             {/* Content (1/3 height) */}
             <div className="h-1/3 px-4 py-3 flex flex-col justify-between">
               <div className="flex flex-col gap-1">
-                {/* Food name – KEEP FONT */}
-                <h2 className="text-lg font-bold text-gray-900 truncate">
+                <h2 className="text-base sm:text-lg font-bold text-gray-900 truncate text-center">
                   {meal.foodName}
                 </h2>
 
-                <div className="flex justify-between text-xs text-gray-500">
+                <div className="flex justify-between text-xs sm:text-sm text-gray-500">
                   <span>{meal.chefName}</span>
                   <span>${meal.price}</span>
                 </div>
 
-                <p className="text-xs text-gray-400 truncate">
+                <p className="text-xs sm:text-sm text-gray-400 truncate">
                   {meal.ingredients}
                 </p>
               </div>

@@ -20,9 +20,12 @@ const ChefMyMeals = () => {
   const fetchMeals = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("https://local-chef-bazar-backend-1.onrender.com/meals", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "https://local-chef-bazar-backend-1.onrender.com/meals",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const myMeals = response.data.filter(
         (meal) => meal.email === UsersAllDataFromDB?.email
       );
@@ -51,9 +54,12 @@ const ChefMyMeals = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`https://local-chef-bazar-backend-1.onrender.com/meals/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.delete(
+          `https://local-chef-bazar-backend-1.onrender.com/meals/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         Swal.fire("Deleted!", "Meal has been deleted.", "success");
         fetchMeals();
       } catch (err) {
@@ -108,8 +114,10 @@ const ChefMyMeals = () => {
     );
 
   return (
-    <div className="w-full mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-8 text-[#C10007]">My Meals</h1>
+    <div className="w-full mx-auto p-4 sm:p-6">
+      <h1 className="text-3xl font-bold text-center mb-8 text-[#C10007]">
+        My Meals
+      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {meals.map((meal) => (
           <div
@@ -119,10 +127,10 @@ const ChefMyMeals = () => {
             <img
               src={meal.foodImage || "https://via.placeholder.com/200"}
               alt={meal.foodName}
-              className="w-full h-48 object-cover"
+              className="w-full h-48 sm:h-56 md:h-48 object-cover"
             />
             <div className="p-4 flex flex-col flex-1">
-              <h2 className="text-xl font-bold text-center mb-2 text-[#C10007]">
+              <h2 className="text-xl font-bold text-center mb-2 text-[#C10007] truncate">
                 {meal.foodName}
               </h2>
               <div className="grid grid-cols-2 gap-2 text-gray-600 text-sm">
@@ -132,20 +140,22 @@ const ChefMyMeals = () => {
                 <p className="font-medium">
                   Rating: <span className="text-[#FFB800]">{meal.rating}/5</span>
                 </p>
-                <p className="col-span-2 mt-1">Ingredients: {meal.ingredients}</p>
+                <p className="col-span-2 mt-1 truncate">
+                  Ingredients: {meal.ingredients}
+                </p>
                 <p>Delivery: {meal.deliveryTime} min</p>
                 <p>Experience: {meal.experience} yrs</p>
               </div>
-              <div className="mt-4 flex justify-center gap-4">
+              <div className="mt-4 flex flex-col sm:flex-row justify-center sm:justify-between gap-2 sm:gap-4">
                 <button
                   onClick={() => handleUpdateClick(meal)}
-                  className="bg-[#FFB800] text-white px-4 py-2 rounded-xl hover:bg-[#e6a800] transition"
+                  className="btn-secondary w-full sm:w-auto"
                 >
                   Update
                 </button>
                 <button
                   onClick={() => handleDelete(meal._id)}
-                  className="bg-[#C10007] text-white px-4 py-2 rounded-xl hover:bg-[#a00005] transition"
+                  className="btn-primary w-full sm:w-auto"
                 >
                   Delete
                 </button>
@@ -157,12 +167,14 @@ const ChefMyMeals = () => {
 
       {/* Update Modal */}
       {updatingMeal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <form
             onSubmit={handleUpdateSubmit}
             className="bg-white p-6 rounded-3xl w-full max-w-md space-y-4 shadow-2xl"
           >
-            <h2 className="text-2xl font-bold text-center text-[#C10007]">Update Meal</h2>
+            <h2 className="text-2xl font-bold text-center text-[#C10007]">
+              Update Meal
+            </h2>
             <InputField
               label="Food Name"
               name="foodName"
@@ -208,17 +220,17 @@ const ChefMyMeals = () => {
               onChange={handleUpdateChange}
             />
 
-            <div className="flex justify-between mt-4">
+            <div className="flex flex-col sm:flex-row justify-between mt-4 gap-2">
               <button
                 type="submit"
-                className="bg-[#FFB800] text-white px-5 py-2 rounded-2xl hover:bg-[#e6a800] transition"
+                className="btn-secondary w-full sm:w-auto"
               >
                 Save
               </button>
               <button
                 type="button"
                 onClick={() => setUpdatingMeal(null)}
-                className="bg-gray-400 text-white px-5 py-2 rounded-2xl hover:bg-gray-500 transition"
+                className="btn-outline w-full sm:w-auto"
               >
                 Cancel
               </button>

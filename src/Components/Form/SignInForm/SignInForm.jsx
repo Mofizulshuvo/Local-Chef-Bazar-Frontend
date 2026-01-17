@@ -30,7 +30,8 @@ const SignInForm = () => {
       const googleUser = await SignInwithGoogle();
       toast.success(`Welcome ${googleUser.displayName || "User"}`);
       
-      if (userRole === "admin") navigate("/adminDashboard");
+      if (userRole === "admin") navigate("/AdminDashboard");
+      if (userRole !== "admin") navigate("/");
       else navigate("/");
     } catch (err) {
       console.error(err);
@@ -48,7 +49,7 @@ const SignInForm = () => {
       const user = await SignInwithEmailAndPassword(email, password);
       toast.success(`Welcome ${user.user.displayName || "User"}`);
       
-      if (userRole === "admin") navigate("/adminDashboard");
+      if (userRole === "admin") navigate("/AdminDashboard");
       else navigate("/");
     } catch (err) {
       console.error(err);

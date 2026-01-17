@@ -1,30 +1,31 @@
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { Navigate } from "react-router";
+import Loader from "../Components/Loader/Loader";
 
 const PrivateRouter = ({ children, allowedRoles }) => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading, userRole } = useContext(AuthContext);
 
-  // Optional: show loader while auth status is loading
-  // if (loading) {
-  //   return (
-  //     <div className="mt-20">
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
+  // Wait until auth state is fully loaded
+  if (loading) {
+    return (
+      <div className="mt-20 text-center text-xl font-semibold h-full">
+        <Loader className="mx-auto my-auto" />
+      </div>
+    );
+  }
 
-  // If user is not logged in
+  // Not logged in -> redirect
   if (!user) {
     return <Navigate to="/SignIn" replace />;
   }
 
-  // If user role is not allowed
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/not-allowed" replace />;
+  // Role not allowed -> redirect
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
+    return <Navigate to="/SignIn" replace />;
   }
 
-  // User is authenticated and role is allowed
+  // Logged in and role allowed -> render children
   return children;
 };
 
