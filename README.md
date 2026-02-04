@@ -4,9 +4,9 @@
 
 ### Food Ordering & Vendor Management Platform
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-22c55e?style=for-the-badge&logo=vercel&logoColor=white)](YOUR_LIVE_URL_HERE)
-[![Frontend](https://img.shields.io/badge/Frontend-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Mofizulshuvo/Local-Chef-Bazar-Frontend)
-[![Backend](https://img.shields.io/badge/Backend-181717?style=for-the-badge&logo=github&logoColor=white)](YOUR_BACKEND_REPO_HERE)
+[![Live Demo](https://vermillion-puffpuff-2d8ad4.netlify.app/)
+[![Frontend](https://github.com/Mofizulshuvo/Local-Chef-Bazar-Frontend.git)
+[![Backend](https://github.com/Mofizulshuvo/Local-Chef-Bazar-Backend.git)
 
 ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
