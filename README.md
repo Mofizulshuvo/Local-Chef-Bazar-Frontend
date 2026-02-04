@@ -4,7 +4,7 @@
 
 ### Food Ordering & Vendor Management Platform
 
-[![Live Demo](https://vermillion-puffpuff-2d8ad4.netlify.app/)
+[![Live Demo]([https://vermillion-puffpuff-2d8ad4.netlify.app/])
 [![Frontend](https://github.com/Mofizulshuvo/Local-Chef-Bazar-Frontend.git)
 [![Backend](https://github.com/Mofizulshuvo/Local-Chef-Bazar-Backend.git)
 
