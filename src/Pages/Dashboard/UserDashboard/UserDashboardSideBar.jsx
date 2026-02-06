@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../../Context/AuthContext";
 import Logo from "../../../Components/Logo/Logo";
 import LogOutButton from "../../../Components/Buttons/LogOutButton";
@@ -18,7 +18,6 @@ import {
 const UserDashboardSideBar = () => {
   const { UsersAllDataFromDB } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
 
   const activeClass = ({ isActive }) =>
     isActive
@@ -90,15 +89,7 @@ const UserDashboardSideBar = () => {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-2">
           {/* Quick Actions */}
-          <div className="flex items-center justify-center space-x-4 mb-6">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-3 bg-red-50 dark:bg-red-950 rounded-xl hover:bg-red-100 dark:hover:bg-red-900 transition-colors duration-200 group"
-              title="Go Back"
-            >
-              <FiArrowLeft size={18} className="text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300" />
-            </button>
-
+          <div className="flex items-center justify-center mb-6">
             <NavLink
               to="/"
               className="p-3 bg-red-50 dark:bg-red-950 rounded-xl hover:bg-red-100 dark:hover:bg-red-900 transition-colors duration-200 group"

@@ -1,6 +1,6 @@
 import React from "react";
 import UserDashboardSideBar from "./UserDashboardSideBar";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 
 const UserDashboard = () => {
   return (

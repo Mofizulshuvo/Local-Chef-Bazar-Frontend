@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import Loader from "../Loader/Loader";
-import { Link } from "react-router"; 
+import { Link } from "react-router-dom";
 
 const Latest6Meals = () => {
   const [meals, setMeals] = useState([]);

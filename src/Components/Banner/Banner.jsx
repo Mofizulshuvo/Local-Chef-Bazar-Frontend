@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { ChevronRight, Star, Users, ChefHat, Clock } from "lucide-react";
 
 const Banner = () => {

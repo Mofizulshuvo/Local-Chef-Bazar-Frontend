@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   FiUser,
   FiClipboard,
@@ -8,7 +8,6 @@ import {
   FiMenu,
   FiX,
   FiHome,
-  FiArrowLeft,
   FiBarChart,
   FiShield,
 } from "react-icons/fi";
@@ -20,7 +19,6 @@ import { AuthContext } from "../../../Context/AuthContext";
 const AdminDashSidebar = () => {
   const { UsersAllDataFromDB } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
 
   const IsActive = ({ isActive }) =>
     isActive
@@ -92,15 +90,7 @@ const AdminDashSidebar = () => {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-2">
           {/* Quick Actions */}
-          <div className="flex items-center justify-center space-x-4 mb-6">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200 group"
-              title="Go Back"
-            >
-              <FiArrowLeft size={18} className="text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white" />
-            </button>
-
+          <div className="flex items-center justify-center mb-6">
             <NavLink
               to="/"
               className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-200 group"

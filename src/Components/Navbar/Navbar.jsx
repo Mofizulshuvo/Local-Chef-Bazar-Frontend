@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import Logo from "../Logo/Logo";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 import LoginButton from "../Buttons/LoginButton";
 import SignUp from "../Buttons/SignUpButton";
 import { AuthContext } from "../../Context/AuthContext";
@@ -125,6 +125,64 @@ const Navbar = () => {
                             >
                               <Star className="w-4 h-4" />
                               <span>My Reviews</span>
+                            </NavLink>
+                          </>
+                        )}
+
+                        {userRole === 'chef' && (
+                          <>
+                            <NavLink
+                              to="/ChefDashboard/CreateMeal"
+                              className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                              onClick={() => setProfileDropdownOpen(false)}
+                            >
+                              <ChefHat className="w-4 h-4" />
+                              <span>Create Meal</span>
+                            </NavLink>
+                            <NavLink
+                              to="/ChefDashboard/MyMeal"
+                              className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                              onClick={() => setProfileDropdownOpen(false)}
+                            >
+                              <ShoppingBag className="w-4 h-4" />
+                              <span>My Meals</span>
+                            </NavLink>
+                            <NavLink
+                              to="/ChefDashboard/OrderRequest"
+                              className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                              onClick={() => setProfileDropdownOpen(false)}
+                            >
+                              <Star className="w-4 h-4" />
+                              <span>Order Requests</span>
+                            </NavLink>
+                          </>
+                        )}
+
+                        {userRole === 'admin' && (
+                          <>
+                            <NavLink
+                              to="/AdminDashboard/ManageUser"
+                              className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                              onClick={() => setProfileDropdownOpen(false)}
+                            >
+                              <User className="w-4 h-4" />
+                              <span>Manage Users</span>
+                            </NavLink>
+                            <NavLink
+                              to="/AdminDashboard/ManageRequest"
+                              className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                              onClick={() => setProfileDropdownOpen(false)}
+                            >
+                              <ShoppingBag className="w-4 h-4" />
+                              <span>Manage Requests</span>
+                            </NavLink>
+                            <NavLink
+                              to="/AdminDashboard/PlatformStatistics"
+                              className="flex items-center space-x-3 px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                              onClick={() => setProfileDropdownOpen(false)}
+                            >
+                              <Star className="w-4 h-4" />
+                              <span>Platform Stats</span>
                             </NavLink>
                           </>
                         )}

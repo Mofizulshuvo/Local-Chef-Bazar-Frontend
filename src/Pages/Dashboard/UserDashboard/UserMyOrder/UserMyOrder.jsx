@@ -4,8 +4,9 @@ import { AuthContext } from "../../../../Context/AuthContext";
 import { toast } from "react-toastify";
 import Loader from "../../../../Components/Loader/Loader";
 import Swal from "sweetalert2";
+import { FiShoppingBag, FiCreditCard, FiCheckCircle, FiClock, FiTruck, FiPackage, FiDollarSign, FiCalendar } from "react-icons/fi";
 
-const UserMyMeal = () => {
+const UserMyOrder = () => {
   const { UsersAllDataFromDB, token } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,91 +62,174 @@ const UserMyMeal = () => {
     }
   };
 
-  if (loading) return <Loader />;
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "pending": return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-400";
+      case "accepted": return "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400";
+      case "delivered": return "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400";
+      case "cancelled": return "bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400";
+      default: return "bg-gray-100 text-gray-700 dark:bg-gray-900/50 dark:text-gray-400";
+    }
+  };
 
-  if (!orders.length)
+  const getPaymentStatusColor = (status) => {
+    switch (status) {
+      case "paid": return "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400";
+      case "pending": return "bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400";
+      default: return "bg-gray-100 text-gray-700 dark:bg-gray-900/50 dark:text-gray-400";
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="flex justify-center items-center mt-16 px-4">
-        <p className="text-black/60 text-lg text-center">No orders yet</p>
+      <div className="flex justify-center items-center min-h-96">
+        <Loader />
       </div>
     );
+  }
+
+  if (!orders.length) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl shadow-lg shadow-blue-500/25">
+            <FiShoppingBag size={36} className="text-white" />
+          </div>
+          <div>
+            <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
+              My Orders
+            </h1>
+            <p className="text-lg text-slate-600 dark:text-slate-400">
+              Track your food orders and payments
+            </p>
+          </div>
+        </div>
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🍽️</div>
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+            No Orders Yet
+          </h3>
+          <p className="text-lg text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
+            You haven't placed any orders yet. Start exploring delicious meals from our chefs!
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full px-4 sm:px-6 py-8">
-      <h2 className="text-3xl sm:text-4xl font-bold text-black text-center mb-8 sm:mb-10">
-        My Orders
-      </h2>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl shadow-lg shadow-blue-500/25">
+          <FiShoppingBag size={36} className="text-white" />
+        </div>
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
+            My Orders
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-400">
+            Track your food orders and payments ({orders.length} orders)
+          </p>
+        </div>
+      </div>
 
-      <div className="space-y-6 max-w-6xl mx-auto">
+      {/* Orders Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {orders.map((order) => (
           <div
             key={order._id}
-            className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row items-center gap-4 sm:gap-6 p-4 sm:p-6"
+            className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-200/50 dark:border-slate-700/50 hover:shadow-2xl transition-all duration-300"
           >
-            {/* Meal Image */}
-            <div className="w-full md:w-32 h-32 rounded-xl overflow-hidden shadow-md flex-shrink-0">
-              <img
-                src={order.foodImage || "https://via.placeholder.com/150"}
-                alt={order.mealName}
-                className="w-full h-full object-cover"
-              />
+            {/* Order Header */}
+            <div className="flex items-start gap-4 mb-6">
+              <div className="relative">
+                <img
+                  src={order.foodImage || "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=80&h=80&fit=crop"}
+                  alt={order.mealName}
+                  className="w-20 h-20 rounded-2xl object-cover border-2 border-slate-200 dark:border-slate-700"
+                />
+                <div className="absolute -top-2 -right-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                  {order.quantity || 1}
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
+                  {order.mealName}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm mb-2">
+                  Chef {order.chefId}
+                </p>
+                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <FiCalendar size={14} />
+                  <span>{new Date(order.orderTime).toLocaleDateString()}</span>
+                </div>
+              </div>
             </div>
 
-            {/* Meal Info */}
-            <div className="flex-1 flex flex-col gap-1 text-center md:text-left">
-              <h3 className="text-lg sm:text-xl font-bold text-black truncate">
-                {order.mealName}
-              </h3>
-              <p className="text-sm sm:text-base text-black/60">
-                Quantity: {order.quantity || 1}
-              </p>
-              <p className="text-sm sm:text-base text-black/60">
-                Total: ${order.price * (order.quantity || 1)}
-              </p>
+            {/* Order Details */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <FiDollarSign size={16} className="text-green-600 dark:text-green-400" />
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Total Price</span>
+                </div>
+                <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  ${(order.price * (order.quantity || 1)).toFixed(2)}
+                </p>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <FiPackage size={16} className="text-blue-600 dark:text-blue-400" />
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Quantity</span>
+                </div>
+                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                  {order.quantity || 1}
+                </p>
+              </div>
             </div>
 
-            {/* Order Status */}
-            <div className="flex flex-col items-center gap-2 min-w-[120px]">
-              <span className="text-xs sm:text-sm uppercase tracking-wide text-black/50">
-                Order
-              </span>
-              <span
-                className={`px-4 py-1 rounded-full text-sm sm:text-base font-semibold text-center ${
-                  order.orderStatus === "pending"
-                    ? "bg-black/10 text-black"
-                    : order.orderStatus === "accepted"
-                    ? "bg-[#C10007]/10 text-[#C10007]"
-                    : "bg-black text-white"
-                }`}
+            {/* Status Section */}
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FiTruck size={16} className="text-slate-600 dark:text-slate-400" />
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Order Status</span>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.orderStatus)}`}>
+                  {order.orderStatus}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FiCreditCard size={16} className="text-slate-600 dark:text-slate-400" />
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Payment Status</span>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(order.paymentStatus)}`}>
+                  {order.paymentStatus}
+                </span>
+              </div>
+            </div>
+
+            {/* Action Button */}
+            {order.orderStatus === "accepted" && order.paymentStatus !== "paid" && (
+              <button
+                onClick={() => handlePayment(order._id)}
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
               >
-                {order.orderStatus}
-              </span>
-            </div>
+                <FiCreditCard size={18} />
+                <span>Pay Now - ${(order.price * (order.quantity || 1)).toFixed(2)}</span>
+              </button>
+            )}
 
-            {/* Payment Status */}
-            <div className="flex flex-col items-center gap-2 min-w-[140px]">
-              <span className="text-xs sm:text-sm uppercase tracking-wide text-black/50">
-                Payment
-              </span>
-
-              {order.orderStatus === "accepted" &&
-              order.paymentStatus !== "paid" ? (
-                <button
-                  onClick={() => handlePayment(order._id)}
-                  className="px-5 py-2 rounded-xl bg-[#C10007] text-white font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition"
-                >
-                  Pay Now
-                </button>
-              ) : order.paymentStatus === "paid" ? (
-                <span className="px-4 py-2 rounded-xl bg-black text-white text-sm sm:text-base font-semibold">
-                  Paid
-                </span>
-              ) : (
-                <span className="px-4 py-2 rounded-xl bg-black/10 text-black/50 text-sm sm:text-base font-semibold">
-                  Waiting
-                </span>
-              )}
-            </div>
+            {order.paymentStatus === "paid" && (
+              <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl py-3 px-6">
+                <FiCheckCircle size={18} />
+                <span className="font-medium">Payment Completed</span>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -153,4 +237,4 @@ const UserMyMeal = () => {
   );
 };
 
-export default UserMyMeal;
+export default UserMyOrder;

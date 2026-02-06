@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../Context/AuthContext";
 import { toast } from "react-toastify";

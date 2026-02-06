@@ -7,7 +7,7 @@ import Card from "../../Components/Card/Card";
 import SkeletonLoader from "../../Components/SkeletonLoader/SkeletonLoader";
 import SearchAndFilter from "../../Components/SearchAndFilter/SearchAndFilter";
 import Swal from "sweetalert2";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Heart, ChefHat, DollarSign, X } from "lucide-react";
 

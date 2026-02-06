@@ -11,7 +11,7 @@ import { AuthContext } from "./AuthContext";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const AuthProvider = ({ children }) => {
 

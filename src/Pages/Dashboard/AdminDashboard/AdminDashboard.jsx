@@ -1,6 +1,6 @@
 import React from "react";
 import AdminDashSidebar from "./AdminDashSidebar";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 
 const AdminDashboard = () => {
   return (
