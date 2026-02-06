@@ -41,16 +41,12 @@ const AdminDashSidebar = () => {
 
       {/* Sidebar */}
       <aside
-        className={`
-          fixed top-0 left-0 h-screen w-80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50
-          flex flex-col justify-between shadow-2xl shadow-slate-900/10 dark:shadow-slate-900/50
-          transform transition-transform duration-300 ease-in-out z-40
-          lg:translate-x-0 lg:static lg:shadow-none
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        `}
+        className={`fixed top-0 left-0 h-screen w-80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex-col justify-between shadow-2xl shadow-slate-900/10 dark:shadow-slate-900/50 z-40 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         {/* Header + Profile */}
-        <div className="sticky top-0 z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50 p-5 flex flex-col items-center space-y-2">
+        <div className="flex flex-col items-center space-y-2 p-5 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl">
           <div className="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-lg">
             <FiShield size={32} className="text-white" />
           </div>
@@ -88,7 +84,7 @@ const AdminDashSidebar = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           {/* Home shortcut */}
           <div className="flex items-center justify-center mb-4">
             <NavLink
@@ -128,7 +124,7 @@ const AdminDashSidebar = () => {
         </nav>
 
         {/* Footer */}
-        <div className="sticky bottom-0 z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50 p-4">
+        <div className="p-4 border-t border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl">
           <LogOutButton className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-2 rounded-xl shadow-lg shadow-red-500/25 hover:shadow-red-500/40 transition-all duration-300 hover:scale-[1.02]" />
         </div>
       </aside>
