@@ -4,7 +4,15 @@ import { AuthContext } from "../../../../Context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { FiPlus, FiUpload, FiCoffee, FiDollarSign, FiClock, FiStar, FiMapPin } from "react-icons/fi";
+import {
+  FiPlus,
+  FiUpload,
+  FiCoffee,
+  FiDollarSign,
+  FiClock,
+  FiStar,
+  FiMapPin,
+} from "react-icons/fi";
 
 const ChefCreateMeal = () => {
   const { UsersAllDataFromDB, token } = useContext(AuthContext);
@@ -16,10 +24,18 @@ const ChefCreateMeal = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm();
 
   const isDisabled = UsersAllDataFromDB.status === "fraud";
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => setImagePreview(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
   const onSubmit = async (data) => {
     if (!data.foodImage || !data.foodImage[0]) {
@@ -30,6 +46,7 @@ const ChefCreateMeal = () => {
     try {
       setLoading(true);
 
+      // Upload image to imgbb
       const formData = new FormData();
       formData.append("image", data.foodImage[0]);
 
@@ -41,9 +58,10 @@ const ChefCreateMeal = () => {
       const imageUrl = imgbbRes.data.data.display_url;
       if (!imageUrl) throw new Error("Image upload failed");
 
+      // Prepare meal data
       const mealData = {
         foodName: data.foodName,
-        chefName: data.chefName,
+        chefName: UsersAllDataFromDB.name,
         foodImage: imageUrl,
         price: Number(data.price),
         rating: Number(data.rating),
@@ -57,6 +75,7 @@ const ChefCreateMeal = () => {
         email: UsersAllDataFromDB?.email,
       };
 
+      // Send to backend
       await axios.post(
         "https://local-chef-bazar-backend-1.onrender.com/meals",
         mealData,
@@ -71,6 +90,7 @@ const ChefCreateMeal = () => {
         backdrop: "rgba(251, 146, 60, 0.4)",
         confirmButtonColor: "#f97316",
       });
+
       reset();
       setImagePreview(null);
     } catch (err) {
@@ -78,15 +98,6 @@ const ChefCreateMeal = () => {
       toast.error(err.response?.data?.message || "Failed to create meal");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => setImagePreview(e.target.result);
-      reader.readAsDataURL(file);
     }
   };
 
@@ -108,7 +119,7 @@ const ChefCreateMeal = () => {
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-orange-500 to-orange-600 rounded-2xl shadow-lg shadow-orange-500/25">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl shadow-lg shadow-orange-500/25">
           <FiPlus size={32} className="text-white" />
         </div>
         <div>
@@ -122,47 +133,45 @@ const ChefCreateMeal = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* Image Upload Section */}
-        <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-200/50 dark:border-slate-700/50">
-          <div className="text-center">
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6">
-              Meal Image
-            </h3>
+        {/* Image Upload */}
+        <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-700">
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6">
+            Meal Image
+          </h3>
 
-            <div className="relative inline-block">
-              <input
-                type="file"
-                accept="image/*"
-                {...register("foodImage")}
-                onChange={handleImageChange}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <div className="w-48 h-48 mx-auto bg-slate-100 dark:bg-slate-700 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200">
-                {imagePreview ? (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-full object-cover rounded-2xl"
-                  />
-                ) : (
-                  <>
-                    <FiUpload size={48} className="text-slate-400 dark:text-slate-500 mb-4" />
-                    <p className="text-slate-600 dark:text-slate-400 font-medium">
-                      Click to upload image
-                    </p>
-                    <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
-                      PNG, JPG up to 5MB
-                    </p>
-                  </>
-                )}
-              </div>
+          <div className="relative w-48 h-48 mx-auto">
+            <input
+              type="file"
+              accept="image/*"
+              {...register("foodImage")}
+              onChange={handleImageChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="w-full h-full bg-slate-100 dark:bg-slate-700 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200">
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+              ) : (
+                <>
+                  <FiUpload size={48} className="text-slate-400 dark:text-slate-500 mb-4" />
+                  <p className="text-slate-600 dark:text-slate-400 font-medium">
+                    Click to upload image
+                  </p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    PNG, JPG up to 5MB
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
 
         {/* Basic Information */}
-        <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-200/50 dark:border-slate-700/50">
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+        <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-700">
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
             <FiCoffee size={24} className="text-orange-500" />
             Basic Information
           </h3>
@@ -171,15 +180,15 @@ const ChefCreateMeal = () => {
             <InputField
               label="Food Name"
               icon={FiCoffee}
-              register={register("foodName", { required: "Food name is required" })}
-              error={errors.foodName?.message}
+              {...register("foodName", { required: "Food name is required" })}
               placeholder="Enter meal name"
+              error={errors.foodName?.message}
             />
 
             <InputField
               label="Chef Name"
               icon={FiCoffee}
-              value={UsersAllDataFromDB.name}
+              defaultValue={UsersAllDataFromDB?.name}
               readOnly
             />
 
@@ -188,12 +197,12 @@ const ChefCreateMeal = () => {
               icon={FiDollarSign}
               type="number"
               step="0.01"
-              register={register("price", {
+              {...register("price", {
                 required: "Price is required",
-                min: { value: 0, message: "Price must be positive" }
+                min: { value: 0, message: "Price must be positive" },
               })}
-              error={errors.price?.message}
               placeholder="0.00"
+              error={errors.price?.message}
             />
 
             <InputField
@@ -203,102 +212,100 @@ const ChefCreateMeal = () => {
               min="1"
               max="5"
               step="0.1"
-              register={register("rating", {
+              {...register("rating", {
                 required: "Rating is required",
                 min: { value: 1, message: "Rating must be at least 1" },
-                max: { value: 5, message: "Rating cannot exceed 5" }
+                max: { value: 5, message: "Rating cannot exceed 5" },
               })}
-              error={errors.rating?.message}
               placeholder="4.5"
+              error={errors.rating?.message}
             />
 
             <InputField
               label="Delivery Time (min)"
               icon={FiClock}
               type="number"
-              register={register("deliveryTime", {
+              {...register("deliveryTime", {
                 required: "Delivery time is required",
-                min: { value: 1, message: "Delivery time must be positive" }
+                min: { value: 1, message: "Delivery time must be positive" },
               })}
-              error={errors.deliveryTime?.message}
               placeholder="30"
+              error={errors.deliveryTime?.message}
             />
 
             <InputField
               label="Experience (years)"
               icon={FiCoffee}
               type="number"
-              register={register("experience", {
+              {...register("experience", {
                 required: "Experience is required",
-                min: { value: 0, message: "Experience cannot be negative" }
+                min: { value: 0, message: "Experience cannot be negative" },
               })}
-              error={errors.experience?.message}
               placeholder="5"
+              error={errors.experience?.message}
             />
           </div>
         </div>
 
         {/* Additional Details */}
-        <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-200/50 dark:border-slate-700/50">
+        <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-700">
           <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
             <FiMapPin size={24} className="text-blue-500" />
             Additional Details
           </h3>
 
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Category
-                </label>
-                <select
-                  {...register("category", { required: "Category is required" })}
-                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
-                >
-                  <option value="">Select category</option>
-                  <option value="appetizer">Appetizer</option>
-                  <option value="main-course">Main Course</option>
-                  <option value="dessert">Dessert</option>
-                  <option value="beverage">Beverage</option>
-                  <option value="snack">Snack</option>
-                </select>
-                {errors.category && (
-                  <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>
-                )}
-              </div>
-
-              <InputField
-                label="Location"
-                icon={FiMapPin}
-                register={register("location", { required: "Location is required" })}
-                error={errors.location?.message}
-                placeholder="City, State"
-              />
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Ingredients
+                Category
               </label>
-              <textarea
-                {...register("ingredients", { required: "Ingredients are required" })}
-                rows={4}
-                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 resize-none"
-                placeholder="List all ingredients separated by commas..."
-              />
-              {errors.ingredients && (
-                <p className="text-red-500 text-sm mt-1">{errors.ingredients.message}</p>
+              <select
+                {...register("category", { required: "Category is required" })}
+                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+              >
+                <option value="">Select category</option>
+                <option value="appetizer">Appetizer</option>
+                <option value="main-course">Main Course</option>
+                <option value="dessert">Dessert</option>
+                <option value="beverage">Beverage</option>
+                <option value="snack">Snack</option>
+              </select>
+              {errors.category && (
+                <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>
               )}
             </div>
+
+            <InputField
+              label="Location"
+              icon={FiMapPin}
+              {...register("location", { required: "Location is required" })}
+              placeholder="City, State"
+              error={errors.location?.message}
+            />
+          </div>
+
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Ingredients
+            </label>
+            <textarea
+              {...register("ingredients", { required: "Ingredients are required" })}
+              rows={4}
+              className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 resize-none"
+              placeholder="List all ingredients separated by commas..."
+            />
+            {errors.ingredients && (
+              <p className="text-red-500 text-sm mt-1">{errors.ingredients.message}</p>
+            )}
           </div>
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <div className="flex justify-center">
           <button
             type="submit"
             disabled={loading}
-            className="px-8 py-4 bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-slate-400 disabled:to-slate-500 text-white font-semibold rounded-2xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 disabled:shadow-none transition-all duration-300 hover:scale-[1.02] disabled:hover:scale-100 disabled:cursor-not-allowed"
+            className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-slate-400 disabled:to-slate-500 text-white font-semibold rounded-2xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 disabled:shadow-none transition-all duration-300 hover:scale-[1.02] disabled:hover:scale-100 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="flex items-center gap-2">
@@ -318,7 +325,8 @@ const ChefCreateMeal = () => {
   );
 };
 
-const InputField = ({ label, icon: Icon, type = "text", error, ...props }) => (
+// Input Field Component
+const InputField = ({ label, icon: Icon, error, ...props }) => (
   <div>
     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
       {label}
@@ -330,8 +338,7 @@ const InputField = ({ label, icon: Icon, type = "text", error, ...props }) => (
         </div>
       )}
       <input
-        type={type}
-        className={`w-full ${Icon ? 'pl-10' : 'pl-4'} pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200`}
+        className={`w-full ${Icon ? "pl-10" : "pl-4"} pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200`}
         {...props}
       />
     </div>

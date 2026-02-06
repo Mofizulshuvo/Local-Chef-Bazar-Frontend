@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
       { path: "/SignIn", element: <SignIn /> },
       {
         path: "/MealDetails/:id",
-        element: <MealDetails />,
+        element:<PrivateRouter allowedRoles={["user", "chef", "admin"]}><MealDetails /></PrivateRouter> ,
       },
     ],
   },
