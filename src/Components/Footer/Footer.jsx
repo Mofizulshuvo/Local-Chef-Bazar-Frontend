@@ -55,9 +55,9 @@ const Footer = () => {
 
   const socialLinks = [
     { name: "Facebook", icon: FaFacebookF, url: "https://facebook.com/localchefbazar", color: "hover:bg-blue-600" },
-    { name: "Twitter", icon: FaTwitter, url: "https://twitter.com/localchefbazar", color: "hover:bg-sky-500" },
-    { name: "Instagram", icon: FaInstagram, url: "https://instagram.com/localchefbazar", color: "hover:bg-pink-600" },
-    { name: "LinkedIn", icon: FaLinkedinIn, url: "https://linkedin.com/company/localchefbazar", color: "hover:bg-blue-700" },
+    { name: "Twitter", icon: FaTwitter, url: "https://x.com/mofizulshuvoo", color: "hover:bg-sky-500" },
+    { name: "Instagram", icon: FaInstagram, url: "https://www.instagram.com/mofizulshuvoo?igsh=MTM1cGhzMW5hYTB0bg==", color: "hover:bg-pink-600" },
+    { name: "LinkedIn", icon: FaLinkedinIn, url: "https://www.linkedin.com/in/mofizul-shuvo/", color: "hover:bg-blue-700" },
     { name: "YouTube", icon: FaYoutube, url: "https://youtube.com/@localchefbazar", color: "hover:bg-red-600" },
   ];
 
@@ -98,11 +98,11 @@ const Footer = () => {
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <FaMapMarkerAlt className="w-4 h-4 text-primary-400 flex-shrink-0" />
-                  <span className="text-sm">123 Culinary Street, Food District<br />New York, NY 10001</span>
+                  <span className="text-sm">Agrabad<br />Chittagong, Bangladesh</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <FaPhone className="w-4 h-4 text-primary-400 flex-shrink-0" />
-                  <span className="text-sm">+1 (555) 123-CHEF</span>
+                  <span className="text-sm">+8801 2345 6789<br /></span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <FaEnvelope className="w-4 h-4 text-primary-400 flex-shrink-0" />
@@ -217,22 +217,13 @@ const Footer = () => {
         <div className="border-t border-neutral-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-              <div className="flex items-center space-x-4 text-sm">
+              <div className="flex items-center text-center mx-auto space-x-4 text-sm">
                 <span>&copy; {new Date().getFullYear()} Local Chef Bazar. All rights reserved.</span>
-                <span className="hidden md:inline text-neutral-600">•</span>
-                <span className="hidden md:inline">Made with <FaHeart className="inline w-3 h-3 text-red-500" /> for food lovers</span>
+              
+                
               </div>
 
-              <div className="flex items-center space-x-6 text-sm">
-                <div className="flex items-center space-x-1">
-                  <FaCheckCircle className="w-4 h-4 text-green-500" />
-                  <span>100% Secure</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <FaStar className="w-4 h-4 text-yellow-500" />
-                  <span>4.9/5 Rating</span>
-                </div>
-              </div>
+              
             </div>
           </div>
         </div>
